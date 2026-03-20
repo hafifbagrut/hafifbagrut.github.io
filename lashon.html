@@ -2295,8 +2295,33 @@ footer{background:var(--pd);color:rgba(255,255,255,.7);text-align:center;padding
 
 <script>
 const N=15;let cur=0,done=new Set,mode='learn',streak=0;
-const topicPerfect={}; // tracks which exercises in each topic got perfect score
-function addXP(){} // stub
+const topicPerfect={};
+function addXP(){}
+
+// Save progress to Firebase
+function saveLashonProgress(){
+  const data = { done: Array.from(done), topicPerfect: {} };
+  Object.keys(topicPerfect).forEach(k => { data.topicPerfect[k] = Array.from(topicPerfect[k]); });
+  saveProgress('lashon', data);
+}
+
+// Load progress from Firebase
+function loadLashonProgress(){
+  loadProgress('lashon', function(data){
+    if(!data) return;
+    if(data.done){ data.done.forEach(d => done.add(d)); }
+    if(data.topicPerfect){
+      Object.keys(data.topicPerfect).forEach(k => {
+        topicPerfect[k] = new Set(data.topicPerfect[k]);
+      });
+    }
+    upd();
+    const bs=document.querySelectorAll('.nb');
+    done.forEach(j => { if(bs[j]) bs[j].classList.add('done'); });
+  });
+}
+// Load on page ready
+setTimeout(loadLashonProgress, 500);
 
 // ===== MODE =====
 function setMode(m){
@@ -2400,11 +2425,11 @@ function markExPerfect(exId){
   if(perfectEx>=totalEx&&totalEx>0){
     if(!done.has(topicNum)){
       done.add(topicNum);
-      addXP(15); // bonus for completing topic
+      addXP(15);
       upd();
-      // Update nav button
       const bs=document.querySelectorAll('.nb');
       if(bs[topicNum])bs[topicNum].classList.add('done');
+      saveLashonProgress();
       checkBadges();
     }
   }

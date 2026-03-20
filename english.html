@@ -2361,8 +2361,20 @@ function initUser() {
     };
 }
 function getModeData(){return currentUser.modes[currentMode];}
-function saveUser(){localStorage.setItem(`hafif_eng_${defaultUser}`,JSON.stringify(currentUser));}
+function saveUser(){
+  localStorage.setItem(`hafif_eng_${defaultUser}`,JSON.stringify(currentUser));
+  saveProgress('english', currentUser);
+}
 initUser();
+// Load progress from Firebase
+setTimeout(function(){
+  loadProgress('english', function(data){
+    if(!data) return;
+    currentUser = data;
+    localStorage.setItem(`hafif_eng_${defaultUser}`, JSON.stringify(currentUser));
+    updateProgress();
+  });
+}, 500);
 setTimeout(updateProgress, 100);
 
 // ===== PROGRESS BAR =====

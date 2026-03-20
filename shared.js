@@ -79,6 +79,21 @@ function doLogin() {
   }).catch(() => showMsg('loginMsg', 'err', 'שגיאת חיבור. נסו שוב.'));
 }
 
+// ===== PROGRESS SAVE/LOAD =====
+function saveProgress(courseId, data) {
+  const phone = localStorage.getItem('hafif_phone');
+  if (!phone || !db) return;
+  db.ref('users/' + phone + '/progress/' + courseId).set(data);
+}
+
+function loadProgress(courseId, callback) {
+  const phone = localStorage.getItem('hafif_phone');
+  if (!phone || !db) { callback(null); return; }
+  db.ref('users/' + phone + '/progress/' + courseId).once('value').then(snap => {
+    callback(snap.val());
+  }).catch(() => callback(null));
+}
+
 // ===== SHOW / HIDE =====
 function hideAuth() {
   const overlay = document.getElementById('authOverlay');
