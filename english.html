@@ -1,0 +1,2787 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>חפיף - בגרות באנגלית 5 יח"ל</title>
+    <link rel="icon" type="image/jpeg" href="favicon.jpeg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --navy: #1e3a5f;
+            --navy-light: #2b5278;
+            --navy-dark: #152d4a;
+            --steel: #3a7ca5;
+            --teal: #2aa198;
+            --teal-light: #e6f5f3;
+            --gold: #e09f3e;
+            --gold-light: #f0b95a;
+            --gold-bg: #fdf6ea;
+            --green: #38a169;
+            --green-light: #edf7f0;
+            --red: #e53e3e;
+            --red-light: #fdeaea;
+            --purple-soft: #eef0f7;
+            --purple-border: #8da0cb;
+            --purple-bg: #f4f5fa;
+            --warm-bg: #faf8f5;
+            --dark: #1a202c;
+            --text: #2d3748;
+            --gray: #718096;
+            --light-gray: #a0aec0;
+            --cream: #f7f8fa;
+            --cream-dark: #edf0f4;
+            --white: #ffffff;
+            --radius: 14px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 14px rgba(0,0,0,0.07);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Heebo', 'Segoe UI', sans-serif;
+            background: var(--cream);
+            min-height: 100vh; color: var(--text);
+            display: flex; flex-direction: column;
+            line-height: 1.6;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: var(--white);
+            padding: 0;
+            display: flex; align-items: center; justify-content: center;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+        .nav-links { display: flex; gap: 0; flex-wrap: wrap; justify-content: center; }
+        .nav-link {
+            padding: 13px 20px; color: var(--gray); background: none;
+            border: none; border-bottom: 2px solid transparent;
+            cursor: pointer; font-size: .88em; transition: all .15s;
+            font-family: 'Heebo', sans-serif; font-weight: 500;
+        }
+        .nav-link:hover { color: var(--navy); }
+        .nav-link.active { color: var(--navy); border-bottom-color: var(--gold); font-weight: 700; }
+
+        /* ===== LAYOUT ===== */
+        .main-container { max-width: 1050px; margin: 0 auto; padding: 28px 20px 40px; flex: 1; width: 100%; }
+        .section { display: none; animation: fadeUp .35s ease; }
+        .section.active { display: block; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pop { 0% { transform: scale(.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes confettiFall {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(120px) rotate(360deg); opacity: 0; }
+        }
+        @keyframes correctFlash {
+            0% { box-shadow: 0 0 0 0 rgba(39,174,96,0.5); }
+            50% { box-shadow: 0 0 20px 8px rgba(39,174,96,0.25); }
+            100% { box-shadow: 0 0 0 0 rgba(39,174,96,0); }
+        }
+        .hidden { display: none !important; }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-panel {
+            background: var(--white); border-radius: var(--radius); padding: 22px 26px;
+            box-shadow: var(--shadow); margin-bottom: 18px;
+        }
+        .progress-top {
+            display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px;
+            justify-content: flex-end;
+        }
+        .progress-pct {
+            font-size: 2.2em; font-weight: 900; color: var(--navy);
+        }
+        .progress-label { color: var(--gray); font-size: .95em; }
+        .progress-track {
+            width: 100%; height: 14px; background: var(--cream-dark);
+            border-radius: 10px; overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; border-radius: 10px;
+            background: linear-gradient(90deg, var(--green), #2ecc71);
+            transition: width .8s cubic-bezier(.22,.61,.36,1);
+            min-width: 0;
+        }
+        .progress-detail {
+            display: flex; justify-content: space-between; margin-top: 8px;
+            font-size: .82em; color: var(--gray);
+        }
+
+        /* ===== CONFETTI ===== */
+        .confetti-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 9999; overflow: hidden;
+        }
+        .confetti-piece {
+            position: absolute; width: 10px; height: 10px; border-radius: 2px;
+            animation: confettiFall 1.2s ease-out forwards;
+        }
+        .quiz-option.correct { animation: correctFlash .5s ease; }
+
+        /* ===== SITE HEADER ===== */
+        .site-header {
+            position: relative; z-index: 100;
+        }
+        .header-top {
+            background: var(--navy);
+        }
+        .header-content {
+            max-width: 1050px; margin: 0 auto;
+            padding: 0;
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center;
+        }
+        .header-logo {
+            max-height: 130px; cursor: pointer;
+            object-fit: contain;
+            margin: 14px 0 4px;
+            border-radius: 16px;
+            background: white;
+            padding: 8px;
+        }
+        .hero-btn {
+            padding: 7px 20px; margin-bottom: 14px; font-size: .82em;
+            background: var(--gold); color: white; border: none; border-radius: 8px;
+            font-size: .88em; font-weight: 700; cursor: pointer; font-family: 'Heebo', sans-serif;
+            transition: all .15s;
+        }
+        .hero-btn:hover { background: var(--gold-light); }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: var(--white);
+            padding: 0;
+            display: flex; align-items: center; justify-content: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        /* ===== DASHBOARD ===== */
+        .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(185px, 1fr)); gap: 16px; }
+        .dash-card {
+            background: var(--white); border-radius: var(--radius); padding: 24px 16px 20px;
+            text-align: center; cursor: pointer; transition: all .2s;
+            box-shadow: var(--shadow);
+        }
+        .dash-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .dash-card .icon {
+            font-size: 1.8em; margin-bottom: 10px;
+            width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;
+            border-radius: 12px; margin-left: auto; margin-right: auto;
+            background: var(--cream-dark);
+        }
+        .dash-card h3 { font-size: 1em; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+        .dash-card p { color: var(--gray); font-size: .82em; line-height: 1.5; }
+
+        /* ===== SECTION TITLES ===== */
+        .sec-banner {
+            margin-bottom: 20px; padding: 16px 0;
+            text-align: center;
+        }
+        .sec-banner h1 {
+            font-size: 1.35em; font-weight: 800; color: var(--dark);
+        }
+        .sec-banner p { color: var(--gray); font-size: .88em; margin-top: 2px; }
+
+        /* ===== PANELS ===== */
+        .panel {
+            background: var(--white); border-radius: var(--radius); padding: 24px;
+            box-shadow: var(--shadow); margin-bottom: 16px;
+        }
+        .panel h2 { color: var(--dark); margin-bottom: 12px; font-weight: 700; font-size: 1.15em; }
+
+        /* ===== BUTTONS ===== */
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 8px 18px; background: var(--white); color: var(--text);
+            border: 1px solid #ddd; border-radius: 8px; cursor: pointer;
+            font-size: .88em; margin-bottom: 16px; transition: all .15s;
+            font-family: 'Heebo', sans-serif; font-weight: 500;
+        }
+        .back-btn:hover { background: var(--cream-dark); }
+        .action-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 11px 28px; border: none; border-radius: 8px;
+            font-size: .95em; cursor: pointer; transition: all .15s;
+            font-family: 'Heebo', sans-serif; font-weight: 700;
+        }
+        .action-btn:hover { opacity: .9; }
+        .action-btn.primary { background: var(--navy); color: white; }
+        .action-btn.success { background: var(--green); color: white; }
+        .action-btn.warning { background: var(--gold); color: white; }
+
+        .result-banner {
+            text-align: center; padding: 20px; border-radius: var(--radius); margin-top: 18px;
+            font-size: 1.15em; font-weight: 700; animation: pop .4s ease;
+        }
+        .result-banner.good { background: var(--green-light); color: var(--green); }
+        .result-banner.ok { background: var(--gold-bg); color: var(--gold); }
+        .result-banner.bad { background: var(--red-light); color: var(--red); }
+
+        /* ===== VOCABULARY ===== */
+        .mode-toggle { display: flex; justify-content: center; gap: 0; margin-bottom: 16px; }
+        .mode-btn {
+            padding: 10px 24px; border: 2px solid var(--navy); background: white;
+            color: var(--navy); cursor: pointer; font-size: .92em; transition: all .2s;
+            font-family: 'Heebo', sans-serif; font-weight: 600;
+        }
+        .mode-btn:first-child { border-radius: 0 8px 8px 0; }
+        .mode-btn:last-child { border-radius: 8px 0 0 8px; }
+        .mode-btn.active { background: var(--navy); color: white; }
+        .vocab-tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+        .tab-btn {
+            padding: 9px 20px; border: 1px solid #ddd; background: white;
+            color: var(--text); border-radius: 8px; cursor: pointer; font-size: .88em;
+            transition: all .15s; font-family: 'Heebo', sans-serif; font-weight: 500;
+        }
+        .tab-btn:hover { border-color: var(--navy); color: var(--navy); }
+        .tab-btn.active { background: var(--navy); color: white; border-color: var(--navy); font-weight: 700; }
+        .tab-btn.blacklist-tab { color: var(--red); }
+        .tab-btn.blacklist-tab.active { background: var(--red); color: white; border-color: var(--red); }
+
+        .search-box { display: flex; justify-content: center; margin-bottom: 14px; }
+        .search-box input {
+            padding: 11px 18px; width: 100%; max-width: 380px;
+            border: 1px solid #ddd; border-radius: 10px; font-size: .95em;
+            outline: none; font-family: 'Heebo', sans-serif; transition: all .2s;
+            background: white;
+        }
+        .search-box input:focus { border-color: var(--purple-border); box-shadow: 0 0 0 3px rgba(179,157,219,0.2); }
+
+        .controls { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+        .control-btn {
+            padding: 8px 16px; border: 1px solid #ddd; background: white;
+            color: var(--text); border-radius: 8px; cursor: pointer; font-size: .85em;
+            transition: all .15s; font-family: 'Heebo', sans-serif; font-weight: 500;
+        }
+        .control-btn:hover { background: var(--cream-dark); }
+        .stats-bar { text-align: center; color: var(--gray); margin-bottom: 10px; font-size: .88em; }
+        .mastered-badge {
+            background: var(--green); color: white; padding: 4px 12px;
+            border-radius: 14px; font-size: .8em; margin-left: 6px;
+        }
+
+        .words-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 10px; }
+        .word-card {
+            background: white; border-radius: var(--radius); padding: 18px 12px; cursor: pointer;
+            transition: all .2s; box-shadow: var(--shadow);
+            position: relative; min-height: 80px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .word-card:hover { box-shadow: var(--shadow-md); }
+        .word-card.revealed { background: var(--navy); }
+        .word-card.blacklisted { border-color: var(--red); background: #fdf6f6; }
+        .word-card.blacklisted::after {
+            content: '✕'; position: absolute; top: 5px; right: 8px;
+            color: var(--red); font-size: .7em; font-weight: 800;
+        }
+        .english-word { font-size: 1.05em; font-weight: 600; color: var(--dark); text-align: center; direction: ltr; }
+        .word-card.revealed .english-word { color: white; }
+        .hebrew-translation { font-size: .92em; color: rgba(255,255,255,0.9); margin-top: 6px; text-align: center; display: none; animation: pop .25s ease; }
+        .word-card.revealed .hebrew-translation { display: block; }
+        .speaker-icon { position: absolute; top: 6px; left: 8px; font-size: .9em; opacity: .3; transition: opacity .2s; }
+        .word-card:hover .speaker-icon { opacity: .6; }
+        .word-card.revealed .speaker-icon { color: white; opacity: .5; }
+
+        /* Quiz */
+        .quiz-mode {
+            background: var(--white);
+            border-radius: var(--radius); padding: 32px;
+            max-width: 520px; margin: 0 auto; text-align: center;
+            box-shadow: var(--shadow);
+        }
+        .quiz-word { font-size: 2em; font-weight: 800; color: var(--navy); margin-bottom: 20px; direction: ltr; animation: pop .3s ease; }
+        .quiz-options { display: flex; flex-direction: column; gap: 9px; }
+        .quiz-option {
+            padding: 12px 16px; border: 1px solid #e2e8f0; border-radius: 10px;
+            cursor: pointer; transition: all .15s; font-size: .95em; background: white;
+        }
+        .quiz-option:hover { border-color: var(--steel); background: var(--cream); }
+        .quiz-option.correct { background: var(--green-light); border-color: var(--green); color: var(--green); font-weight: 700; }
+        .quiz-option.wrong { background: var(--red-light); border-color: var(--red); color: var(--red); }
+        .quiz-score { font-size: 1.05em; color: var(--navy); margin-bottom: 14px; font-weight: 700; }
+        .quiz-next {
+            padding: 10px 24px; background: var(--navy); color: white; border: none;
+            border-radius: 8px; cursor: pointer; font-size: .9em; margin-top: 12px;
+            font-family: 'Heebo', sans-serif; font-weight: 600; transition: all .15s;
+        }
+        .quiz-next:hover { opacity: .9; }
+        .quiz-unsure {
+            padding: 8px 16px; background: white; color: var(--gold);
+            border: 1px solid var(--gold); border-radius: 8px; cursor: pointer;
+            font-size: .83em; margin-top: 10px; transition: all .15s;
+            font-family: 'Heebo', sans-serif; font-weight: 500;
+        }
+        .quiz-unsure:hover { background: var(--gold); color: white; }
+        .quiz-unsure.added { background: var(--gold); color: white; }
+        .quiz-unsure.know-it { color: var(--green); border-color: var(--green); }
+        .quiz-unsure.know-it:hover { background: var(--green); color: white; }
+        .quiz-unsure.know-it.added { background: var(--green); color: white; }
+        .quiz-buttons { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
+        .blacklist-header { text-align: center; margin-bottom: 14px; }
+        .blacklist-quiz-btn {
+            padding: 10px 22px; background: var(--red); color: white; border: none;
+            border-radius: 8px; font-size: .9em; cursor: pointer;
+            font-family: 'Heebo', sans-serif; font-weight: 700; transition: all .15s;
+        }
+        .blacklist-quiz-btn:hover { opacity: .9; }
+        .empty-blacklist { text-align: center; color: var(--light-gray); padding: 40px; font-size: 1.1em; }
+
+        /* ===== CONTENT CARDS ===== */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+        .content-card {
+            background: white; border-radius: var(--radius); padding: 22px;
+            cursor: pointer; transition: all .25s; box-shadow: var(--shadow);
+        }
+        .content-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+        .content-card h3 { font-size: 1.02em; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+        .content-card .tag {
+            display: inline-block; padding: 3px 10px; border-radius: 10px;
+            font-size: .72em; font-weight: 600; margin-bottom: 6px; margin-left: 4px;
+        }
+        .tag-blue { background: var(--purple-soft); color: var(--navy-light); }
+        .tag-green { background: var(--teal-light); color: var(--teal); }
+        .tag-orange { background: var(--gold-bg); color: var(--gold); }
+        .tag-pink { background: var(--green-light); color: var(--green); }
+        .content-card p { color: var(--gray); font-size: .84em; line-height: 1.4; }
+        .content-card .meta { margin-top: 10px; font-size: .76em; color: var(--light-gray); }
+
+        .passage-text {
+            direction: ltr; text-align: left; line-height: 2; font-size: 1.03em;
+            color: var(--text); background: var(--white); padding: 26px; border-radius: 14px;
+            margin-bottom: 18px; box-shadow: var(--shadow);
+        }
+        .passage-text p { margin-bottom: 14px; color: var(--text); }
+
+        .question-block {
+            margin-bottom: 14px; padding: 16px; background: var(--white); border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+        .question-block .q-num {
+            font-weight: 700; color: var(--teal); font-size: .82em; margin-bottom: 6px;
+        }
+        .question-block .q-text { color: var(--dark); margin-bottom: 10px; direction: ltr; text-align: left; font-weight: 600; }
+        .q-options { display: flex; flex-direction: column; gap: 7px; direction: ltr; text-align: left; }
+        .q-option {
+            padding: 11px 16px; border: 1px solid #e2e8f0; border-radius: 10px;
+            cursor: pointer; transition: all .15s; font-size: .93em; background: white;
+        }
+        .q-option:hover { border-color: var(--steel); background: var(--cream); }
+        .q-option.selected { border-color: var(--navy); background: var(--purple-soft); font-weight: 600; }
+        .q-option.correct { border-color: var(--green); background: var(--green-light); font-weight: 600; }
+        .q-option.wrong { border-color: var(--red); background: var(--red-light); }
+        .answer-explanation {
+            margin-top: 10px; padding: 12px 16px; background: var(--green-light);
+            border-radius: 10px;
+            font-size: .86em; color: #1e6b31; direction: ltr; text-align: left;
+        }
+
+        /* ===== GRAMMAR ===== */
+        .grammar-card {
+            background: white; border-radius: var(--radius); padding: 22px;
+            transition: all .25s; box-shadow: var(--shadow);
+        }
+        .grammar-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+        .grammar-card h3 { font-weight: 700; color: var(--navy); margin-bottom: 4px; font-size: 1.02em; }
+        .grammar-card p { color: var(--gray); font-size: .84em; line-height: 1.4; }
+        .grammar-card .card-actions { display: flex; gap: 8px; margin-top: 12px; }
+        .grammar-card .card-action {
+            padding: 7px 16px; border-radius: 8px; font-size: .8em; font-weight: 600;
+            border: none; cursor: pointer; transition: all .15s;
+            font-family: 'Heebo', sans-serif;
+        }
+        .card-action.learn { background: var(--navy); color: white; }
+        .card-action.learn:hover { opacity: .9; }
+        .card-action.practice { background: var(--cream-dark); color: var(--text); }
+        .card-action.practice:hover { background: var(--navy); color: white; }
+
+        /* Grammar Learn */
+        .grammar-lesson { /* mixed RTL/LTR */ }
+        .lesson-section {
+            background: var(--white); border-radius: 14px; padding: 22px; margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+        .lesson-section h3 { color: var(--navy); font-size: 1.15em; margin-bottom: 10px; unicode-bidi: plaintext; font-weight: 800; }
+        .lesson-section p { line-height: 1.75; color: #444; margin-bottom: 8px; unicode-bidi: plaintext; font-size: .95em; }
+        .grammar-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            margin: 12px 0; font-size: .91em; direction: ltr; text-align: left;
+            border-radius: 10px; overflow: hidden; box-shadow: var(--shadow);
+        }
+        .grammar-table th {
+            background: var(--navy); color: white; padding: 11px 14px; text-align: left;
+            font-weight: 700; unicode-bidi: plaintext; font-size: .88em;
+        }
+        .grammar-table td {
+            padding: 10px 14px; border-bottom: 1px solid #eaedf0; unicode-bidi: plaintext; background: white;
+        }
+        .grammar-table tr:nth-child(even) td { background: #f8f9fa; }
+        .grammar-table tr:hover td { background: var(--warm-bg); }
+        .grammar-table .example-cell { color: var(--navy-light); font-weight: 500; }
+
+        .tip-box {
+            background: var(--gold-bg);
+            border-radius: 12px; padding: 16px 18px; margin: 12px 0;
+        }
+        .tip-box strong { color: var(--gold); font-weight: 800; }
+        .tip-box p { color: #555; line-height: 1.65; unicode-bidi: plaintext; }
+        .example-box {
+            background: var(--teal-light); border-radius: 12px; padding: 14px 18px; margin: 10px 0;
+            direction: ltr; text-align: left;
+        }
+        .example-box .correct-ex { color: var(--green); font-weight: 700; }
+        .example-box .wrong-ex { color: var(--red); text-decoration: line-through; opacity: .8; }
+
+        /* Grammar Practice */
+        .ge-q {
+            padding: 14px 18px; background: var(--white); border-radius: 12px;
+            direction: ltr; text-align: left; font-size: 1.02em; line-height: 1.75;
+            margin-bottom: 4px; box-shadow: var(--shadow);
+        }
+        .ge-options { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 16px; direction: ltr; }
+        .ge-opt {
+            padding: 8px 16px; border: 1px solid #e2e8f0; border-radius: 8px;
+            cursor: pointer; transition: all .15s; font-size: .9em;
+            background: white; font-weight: 500;
+        }
+        .ge-opt:hover { border-color: var(--steel); background: var(--cream); }
+        .ge-opt.selected { border-color: var(--navy); background: var(--purple-soft); font-weight: 600; }
+        .ge-opt.correct { border-color: var(--green); background: var(--green-light); font-weight: 700; }
+        .ge-opt.wrong { border-color: var(--red); background: var(--red-light); }
+
+        /* ===== WRITING ===== */
+        .writing-tips {
+            background: var(--gold-bg); border-radius: var(--radius); padding: 20px 22px;
+            margin-bottom: 16px;
+        }
+        .writing-tips h4 { color: var(--gold); margin-bottom: 8px; font-weight: 800; }
+        .writing-tips ul { padding-right: 20px; color: #555; }
+        .writing-tips li { margin-bottom: 5px; line-height: 1.55; }
+        .type-badge {
+            display: inline-block; padding: 5px 14px; background: var(--steel);
+            color: white; border-radius: 12px; font-size: .73em; font-weight: 700;
+            letter-spacing: .3px;
+        }
+        .essay-area {
+            width: 100%; min-height: 260px; padding: 18px; border: 2px solid #d5d8dc;
+            border-radius: 14px; font-size: 1em; direction: ltr; text-align: left;
+            line-height: 1.75; resize: vertical; font-family: 'Heebo', sans-serif;
+            transition: all .2s; background: white;
+        }
+        .essay-area:focus { border-color: var(--teal); outline: none; box-shadow: 0 0 0 3px rgba(0,151,167,0.12); }
+        .word-count { text-align: right; color: var(--gray); font-size: .83em; margin-top: 6px; direction: ltr; font-weight: 500; }
+
+        /* ===== EXAMS ===== */
+        .exam-card {
+            background: white; border-radius: var(--radius); padding: 24px;
+            cursor: pointer; transition: all .25s; box-shadow: var(--shadow);
+        }
+        .exam-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+        .exam-card h3 { font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+        .exam-module {
+            display: inline-block; padding: 4px 12px; background: var(--navy);
+            color: white; border-radius: 10px; font-size: .76em; font-weight: 700; margin-bottom: 8px;
+        }
+        .timer-bar {
+            position: sticky; top: 10px; z-index: 50;
+            background: linear-gradient(90deg, var(--navy-dark), var(--navy));
+            padding: 12px 20px; border-radius: var(--radius);
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: var(--shadow-md); margin-bottom: 16px;
+            color: white;
+        }
+        .timer-display { font-size: 1.5em; font-weight: 900; color: white; direction: ltr; font-variant-numeric: tabular-nums; }
+        .timer-display.warning { color: var(--gold-light); }
+        .timer-display.danger { color: #ff6b6b; animation: pulse 1s infinite; }
+        .timer-bar .exam-label { color: rgba(255,255,255,0.7); font-size: .88em; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+
+        .footer-wrapper {
+            background: var(--navy-dark);
+            margin-top: auto;
+        }
+        .footer {
+            max-width: 1050px; margin: 0 auto;
+            text-align: center; padding: 16px 20px; font-size: .78em;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 700px) {
+            .nav-links { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; justify-content: flex-start; }
+            .nav-links::-webkit-scrollbar { display: none; }
+            .nav-link { padding: 12px 14px; font-size: .82em; white-space: nowrap; }
+            .main-container { padding: 14px 10px 40px; }
+            .header-logo { max-height: 130px; }
+            .hero-btn { font-size: .82em; padding: 10px 22px; }
+            .words-grid { grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 8px; }
+            .dash-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .dash-card { padding: 20px 12px 16px; }
+            .card-grid { grid-template-columns: 1fr; }
+            .panel { padding: 18px 14px; }
+            .quiz-mode { padding: 22px 16px; }
+            .quiz-word { font-size: 1.6em; }
+        }
+        @media (max-width: 420px) {
+            .dash-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 1.2em; }
+        }
+    </style>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="icon" type="image/jpeg" href="logo-small.jpeg">
+</head>
+<body>
+
+<!-- AUTH OVERLAY -->
+<div id="authOverlay" class="auth-wrap">
+<div class="auth-box">
+  <div id="authStep1" class="auth-step on">
+    <img src="logo-small.jpeg" style="width:70px;border-radius:12px;margin-bottom:.8rem" alt="">
+    <h2>אנגלית 5 יח"ל</h2>
+    <p class="sub">הזינו את מספר הטלפון שהזנתם בעת הרכישה</p>
+    <input class="auth-input" id="loginPhone" placeholder="מספר טלפון" type="tel" dir="ltr" onkeydown="if(event.key==='Enter')doLogin()">
+    <div id="loginMsg" class="auth-msg"></div>
+    <button class="auth-btn primary" onclick="doLogin()">כניסה</button>
+    <div class="auth-divider">עדיין לא רכשתם?</div>
+    <button class="auth-btn secondary" onclick="authShowStep(2)">הרשמה חדשה</button>
+    <div style="margin-top:1rem"><a href="mailto:hafifbagrut@gmail.com?subject=שילמתי ולא מצליח להיכנס" class="auth-link" style="font-size:.8rem;color:var(--txl)">שילמתי ולא מצליח/ה להיכנס?</a></div>
+  </div>
+  <div id="authStep2" class="auth-step">
+    <h2>רכישת גישה</h2>
+    <p class="sub">גישה מלאה לקורס אנגלית 5 יח"ל תמורת ₪15 בלבד</p>
+    <a href="https://pay.grow.link/5244127c209832a7c537a5c89fbef33b-MzIwMjYyOQ" target="_blank" class="auth-btn primary" style="display:block;text-decoration:none;text-align:center;font-size:1.1rem;margin-bottom:.5rem">← שלמו ₪15 וקבלו גישה</a>
+    <p style="font-size:.82rem;color:var(--txl);margin-bottom:.8rem">תשלום מאובטח. לאחר התשלום היכנסו עם מספר הטלפון שהזנתם.</p>
+    <div style="margin-top:.5rem"><span class="auth-link" onclick="authShowStep(1)">כבר שילמתי - חזרה לכניסה</span></div>
+  </div>
+</div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="admin-wrap">
+  <div class="admin-header">
+    <h2>פאנל ניהול – חפיף</h2>
+    <div class="admin-hdr-btns">
+      <button onclick="exportUsers()">ייצוא CSV</button>
+      <button onclick="closeAdmin()">✕ סגור</button>
+    </div>
+  </div>
+  <div class="admin-stats" id="adminStats"></div>
+  <div class="admin-users" id="adminUsers"><p style="text-align:center;padding:2rem;color:var(--txl)">טוען...</p></div>
+</div>
+
+<button id="logoutBtn" class="logout-btn" onclick="doLogout()">התנתקות</button>
+
+<!-- ===== HEADER ===== -->
+<header id="siteHeader" class="site-header">
+    <div class="header-top">
+        <div class="header-content">
+            <img src="logo.jpeg" alt="חפיף" class="header-logo" onclick="navigateTo('dashboard')">
+            <button class="hero-btn" onclick="navigateTo('grammar')">אנגלית · תרגול בפורמט בגרות · הסברים</button>
+        </div>
+    </div>
+    <nav class="navbar">
+        <div class="nav-links">
+            <button class="nav-link active" data-section="dashboard">🏠 דף הבית</button>
+            <button class="nav-link" data-section="vocabulary">📚 אוצר מילים</button>
+            <button class="nav-link" data-section="reading">📖 הבנת הנקרא</button>
+            <button class="nav-link" data-section="grammar">🔤 דקדוק</button>
+            <button class="nav-link" data-section="writing">✍️ כתיבה</button>
+            <button class="nav-link" data-section="exams">📝 סימולציות</button>
+        </div>
+    </nav>
+</header>
+
+<div class="main-container">
+
+    <!-- ===== DASHBOARD ===== -->
+    <div id="sec-dashboard" class="section active">
+        <div class="progress-panel" id="progressPanel">
+            <div class="progress-top">
+                <span class="progress-pct" id="progressPct">0%</span>
+                <span class="progress-label">מהחומר הושלם</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill" style="width:0%"></div>
+            </div>
+            <div class="progress-detail" id="progressDetail"></div>
+        </div>
+        <div class="dash-grid">
+            <div class="dash-card" onclick="navigateTo('vocabulary')">
+                <div class="icon">📚</div>
+                <h3>אוצר מילים</h3>
+                <p>כרטיסיות, מבחנים ורשימה שחורה למילות הבגרות</p>
+            </div>
+            <div class="dash-card" onclick="navigateTo('reading')">
+                <div class="icon">📖</div>
+                <h3>הבנת הנקרא</h3>
+                <p>טקסטים בסגנון בגרות עם שאלות ותשובות מפורטות</p>
+            </div>
+            <div class="dash-card" onclick="navigateTo('grammar')">
+                <div class="icon">🔤</div>
+                <h3>דקדוק</h3>
+                <p>הסברים מפורטים, טבלאות, דוגמאות ותרגילים</p>
+            </div>
+            <div class="dash-card" onclick="navigateTo('writing')">
+                <div class="icon">✍️</div>
+                <h3>כתיבת חיבור</h3>
+                <p>נושאים, מבנה, טיפים ותרגול כתיבה עם ספירת מילים</p>
+            </div>
+            <div class="dash-card" onclick="navigateTo('exams')">
+                <div class="icon">📝</div>
+                <h3>סימולציות בגרות</h3>
+                <p>מבחנים שלמים עם טיימר כמו בבגרות האמיתית</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== VOCABULARY ===== -->
+    <div id="sec-vocabulary" class="section">
+        <div class="sec-banner steel">
+            <h1>📚 אוצר מילים לבגרות</h1>
+            <p>למד ותרגל את כל המילים שצריך לדעת לבגרות</p>
+        </div>
+        <div class="mode-toggle">
+            <button class="mode-btn active" data-mode="en-to-he">אנגלית → עברית</button>
+            <button class="mode-btn" data-mode="he-to-en">עברית → אנגלית</button>
+        </div>
+        <div id="userStatsMini" class="stats-bar"></div>
+        <div class="vocab-tabs">
+            <button class="tab-btn active" data-list="all">כל המילים</button>
+            <button class="tab-btn blacklist-tab" data-list="blacklist">רשימה שחורה</button>
+            <button class="tab-btn" data-list="quiz">🎯 מבחן</button>
+        </div>
+        <div class="blacklist-header hidden" id="blacklistHeader">
+            <button class="blacklist-quiz-btn" id="blacklistQuizBtn">התחל מבחן על הרשימה השחורה</button>
+        </div>
+        <!-- Quiz type picker -->
+        <div class="quiz-picker hidden" id="quizPicker">
+            <div class="panel" style="max-width:500px;margin:0 auto;text-align:center">
+                <h2>🎯 בחר סוג מבחן</h2>
+                <p style="color:var(--gray);margin-bottom:18px">על אילו מילים תרצה להיבחן?</p>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                    <button class="action-btn primary" style="justify-content:center;width:100%" onclick="startQuiz(false)">📚 כל המילים</button>
+                    <button class="action-btn" style="justify-content:center;width:100%;background:var(--teal);color:white" onclick="startQuiz('new')">🆕 מילים חדשות בלבד</button>
+                    <button class="action-btn warning" style="justify-content:center;width:100%" onclick="startQuiz(true)">⚠ רשימה שחורה</button>
+                    <button class="control-btn" style="margin-top:6px" onclick="closeQuizPicker()">✕ ביטול</button>
+                </div>
+            </div>
+        </div>
+        <div class="search-box" id="searchBox"><input type="text" id="searchInput" placeholder="🔍 חפש מילה..."></div>
+        <div class="controls" id="controls">
+            <button class="control-btn" id="revealAll">הצג הכל</button>
+            <button class="control-btn" id="hideAll">הסתר הכל</button>
+            <button class="control-btn" id="shuffle">🔀 ערבב</button>
+            <button class="control-btn" id="muteBtn" onclick="toggleMute()">🔊 השמע</button>
+        </div>
+        <div class="stats-bar" id="stats"></div>
+        <div class="words-grid" id="wordsGrid"></div>
+        <div class="quiz-mode hidden" id="quizMode">
+            <div class="quiz-score" id="quizScore">ניקוד: 0/0</div>
+            <div class="quiz-word" id="quizWord"></div>
+            <div class="quiz-options" id="quizOptions"></div>
+            <button class="quiz-unsure hidden" id="quizUnsure">⚠ לא הייתי בטוח במילה הזאת</button>
+            <div class="quiz-buttons">
+                <button class="quiz-next hidden" id="quizNext">המילה הבאה ←</button>
+                <button class="quiz-next" id="quizExit" style="background:var(--gray);">✕ יציאה</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== READING ===== -->
+    <div id="sec-reading" class="section">
+        <div class="sec-banner steel">
+            <h1>📖 הבנת הנקרא</h1>
+            <p>טקסטים ושאלות בסגנון שאלוני E ו-G בבגרות</p>
+        </div>
+        <div id="readingList" class="card-grid"></div>
+        <div id="readingExercise" class="hidden"></div>
+    </div>
+
+    <!-- ===== GRAMMAR ===== -->
+    <div id="sec-grammar" class="section">
+        <div class="sec-banner gold">
+            <h1>🔤 דקדוק</h1>
+            <p>הסברים מפורטים ותרגולים נפרדים לכל נושא</p>
+        </div>
+        <div id="grammarList" class="card-grid"></div>
+        <div id="grammarView" class="hidden"></div>
+    </div>
+
+    <!-- ===== WRITING ===== -->
+    <div id="sec-writing" class="section">
+        <div class="sec-banner green">
+            <h1>✍️ כתיבת חיבור</h1>
+            <p>תרגול כתיבה בסגנון Module G</p>
+        </div>
+        <div id="writingList" class="card-grid"></div>
+        <div id="writingExercise" class="hidden"></div>
+    </div>
+
+    <!-- ===== EXAMS ===== -->
+    <div id="sec-exams" class="section">
+        <div class="sec-banner dark">
+            <h1>📝 סימולציות בגרות</h1>
+            <p>מבחנים שלמים עם טיימר — בדיוק כמו בבגרות</p>
+        </div>
+        <div id="examList" class="card-grid"></div>
+        <div id="examExercise" class="hidden"></div>
+    </div>
+
+
+</div>
+
+<div class="footer-wrapper">
+    <div class="footer">חפיף — ללמוד חכם לבגרות</div>
+</div>
+
+<script>
+// =====================================================================
+// DATA
+// =====================================================================
+const vocabulary = {
+            "LISTA": [
+                {en: "addition", he: "תוספת"},
+                {en: "advance", he: "התקדמות"},
+                {en: "advanced", he: "מתקדם"},
+                {en: "advertising", he: "פרסום"},
+                {en: "among other things", he: "בין היתר"},
+                {en: "analysis", he: "ניתוח"},
+                {en: "appear", he: "להופיע, להיראות"},
+                {en: "approach", he: "גישה, לגשת"},
+                {en: "as", he: "כאשר, בזמן ש"},
+                {en: "at least", he: "לפחות"},
+                {en: "average", he: "ממוצע"},
+                {en: "be responsible for", he: "להיות אחראי על"},
+                {en: "before", he: "לפני"},
+                {en: "besides", he: "חוץ מזה, בנוסף"},
+                {en: "can", he: "יכול (אפשרות)"},
+                {en: "challenge", he: "אתגר, לאתגר"},
+                {en: "chance", he: "סיכוי, הזדמנות"},
+                {en: "change", he: "שינוי, לשנות"},
+                {en: "characteristic", he: "מאפיין, תכונה"},
+                {en: "claim", he: "טענה, לטעון"},
+                {en: "come after/first/last", he: "לבוא אחרי/ראשון/אחרון"},
+                {en: "common", he: "נפוץ, משותף"},
+                {en: "complicated", he: "מסובך"},
+                {en: "concern", he: "דאגה, לדאוג"},
+                {en: "conditions", he: "תנאים"},
+                {en: "conduct", he: "לבצע, להוביל"},
+                {en: "consequence", he: "תוצאה, השלכה"},
+                {en: "considerable", he: "ניכר, משמעותי"},
+                {en: "cope", he: "להתמודד"},
+                {en: "critic", he: "מבקר"},
+                {en: "current", he: "נוכחי, עכשווי"},
+                {en: "decrease", he: "ירידה, לרדת"},
+                {en: "delayed", he: "מעוכב, מאוחר"},
+                {en: "deliberately", he: "בכוונה"},
+                {en: "demonstrate", he: "להדגים, להפגין"},
+                {en: "design", he: "עיצוב, לעצב"},
+                {en: "destruction", he: "הרס"},
+                {en: "development", he: "התפתחות, פיתוח"},
+                {en: "disagreement", he: "מחלוקת, אי-הסכמה"},
+                {en: "disaster", he: "אסון"},
+                {en: "discovery", he: "גילוי, תגלית"},
+                {en: "dislike", he: "סלידה, לא לאהוב"},
+                {en: "do", he: "לעשות (להדגשה)"},
+                {en: "doubt", he: "ספק, לפקפק"},
+                {en: "drop", he: "טיפה, ליפול"},
+                {en: "educate", he: "לחנך"},
+                {en: "efficient", he: "יעיל"},
+                {en: "emphasis", he: "דגש"},
+                {en: "enjoyable", he: "מהנה"},
+                {en: "essay", he: "חיבור, מאמר"},
+                {en: "essentially", he: "בעיקרו של דבר"},
+                {en: "even if", he: "אפילו אם"},
+                {en: "even though", he: "למרות ש"},
+                {en: "event", he: "אירוע"},
+                {en: "exactly", he: "בדיוק"},
+                {en: "except that", he: "חוץ מזה ש"},
+                {en: "exist", he: "להתקיים"},
+                {en: "extraordinary", he: "יוצא דופן"},
+                {en: "feature", he: "תכונה, מאפיין"},
+                {en: "feedback", he: "משוב"},
+                {en: "figure", he: "דמות, מספר"},
+                {en: "financial", he: "כספי, פיננסי"},
+                {en: "finding/findings", he: "ממצא/ממצאים"},
+                {en: "flexible", he: "גמיש"},
+                {en: "flood", he: "שיטפון, להציף"},
+                {en: "flu", he: "שפעת"},
+                {en: "focus on", he: "להתמקד ב"},
+                {en: "focus", he: "מיקוד"},
+                {en: "frequent", he: "תכוף"},
+                {en: "fresh", he: "טרי, חדש"},
+                {en: "frighten", he: "להפחיד"},
+                {en: "from", he: "מ (מיקום, מקור)"},
+                {en: "gain", he: "רווח, להרוויח"},
+                {en: "generate", he: "לייצר, ליצור"},
+                {en: "guidance", he: "הדרכה, הכוונה"},
+                {en: "hopefully", he: "בתקווה"},
+                {en: "ideal", he: "אידיאלי"},
+                {en: "illness", he: "מחלה"},
+                {en: "illustrate", he: "להמחיש"},
+                {en: "image", he: "תמונה, דימוי"},
+                {en: "in", he: "ב (מצב, רגש)"},
+                {en: "in terms of", he: "מבחינת"},
+                {en: "in actual fact", he: "למעשה"},
+                {en: "in connection with", he: "בקשר ל"},
+                {en: "in that case", he: "במקרה כזה"},
+                {en: "in the meantime", he: "בינתיים"},
+                {en: "initial", he: "ראשוני"},
+                {en: "instruction", he: "הוראה, הדרכה"},
+                {en: "intelligence", he: "אינטליגנציה, מודיעין"},
+                {en: "interest", he: "עניין, ריבית"},
+                {en: "introduce", he: "להציג, להכניס"},
+                {en: "invest", he: "להשקיע"},
+                {en: "investigate", he: "לחקור"},
+                {en: "just about", he: "כמעט"},
+                {en: "keep on doing", he: "להמשיך לעשות"},
+                {en: "kind of", he: "קצת, סוג של"},
+                {en: "knowledge", he: "ידע"},
+                {en: "lack", he: "חוסר, לחסר"},
+                {en: "landscape", he: "נוף"},
+                {en: "likely", he: "סביר"},
+                {en: "limited", he: "מוגבל"},
+                {en: "little", he: "מעט"},
+                {en: "look at", he: "להסתכל על"},
+                {en: "low", he: "נמוך"},
+                {en: "material", he: "חומר"},
+                {en: "mean", he: "להתכוון, ממוצע"},
+                {en: "means", he: "אמצעי"},
+                {en: "measure", he: "מידה, למדוד"},
+                {en: "mention", he: "לציין, להזכיר"},
+                {en: "miss", he: "לפספס, להחמיץ"},
+                {en: "misunderstand", he: "להבין לא נכון"},
+                {en: "more or less", he: "פחות או יותר"},
+                {en: "must", he: "חייב (סביר)"},
+                {en: "naturally", he: "באופן טבעי"},
+                {en: "nature", he: "טבע, אופי"},
+                {en: "necessarily", he: "בהכרח"},
+                {en: "nevertheless", he: "עם זאת"},
+                {en: "not at all", he: "בכלל לא"},
+                {en: "not only", he: "לא רק"},
+                {en: "notice", he: "הודעה, לשים לב"},
+                {en: "objective", he: "מטרה, אובייקטיבי"},
+                {en: "occasional", he: "מזדמן"},
+                {en: "official", he: "רשמי"},
+                {en: "on the one hand... on the other hand", he: "מצד אחד... מצד שני"},
+                {en: "once", he: "ברגע ש"},
+                {en: "others", he: "אחרים"},
+                {en: "otherwise", he: "אחרת"},
+                {en: "out of date", he: "מיושן"},
+                {en: "participate", he: "להשתתף"},
+                {en: "particular", he: "מסוים, מיוחד"},
+                {en: "past", he: "עבר, בעבר"},
+                {en: "perform", he: "לבצע, להופיע"},
+                {en: "personality", he: "אישיות"},
+                {en: "personally", he: "באופן אישי"},
+                {en: "planet", he: "כוכב לכת"},
+                {en: "planning", he: "תכנון"},
+                {en: "plant", he: "צמח, מפעל"},
+                {en: "point of view", he: "נקודת מבט"},
+                {en: "policy", he: "מדיניות"},
+                {en: "pollution", he: "זיהום"},
+                {en: "popular", he: "פופולרי"},
+                {en: "population", he: "אוכלוסייה"},
+                {en: "prevent", he: "למנוע"},
+                {en: "priority", he: "עדיפות"},
+                {en: "private", he: "פרטי"},
+                {en: "probable", he: "סביר"},
+                {en: "produce", he: "לייצר"},
+                {en: "profession", he: "מקצוע"},
+                {en: "professor", he: "פרופסור"},
+                {en: "proof", he: "הוכחה"},
+                {en: "proposed", he: "מוצע"},
+                {en: "protest", he: "מחאה, להפגין"},
+                {en: "provided (that)", he: "בתנאי ש"},
+                {en: "psychology", he: "פסיכולוגיה"},
+                {en: "public", he: "ציבורי"},
+                {en: "purpose", he: "מטרה"},
+                {en: "quality", he: "איכות"},
+                {en: "question", he: "שאלה, לשאול"},
+                {en: "questionnaire", he: "שאלון"},
+                {en: "react", he: "להגיב"},
+                {en: "reasonable", he: "סביר, הגיוני"},
+                {en: "recommend", he: "להמליץ"},
+                {en: "recycle", he: "למחזר"},
+                {en: "regard", he: "התחשבות, להתייחס"},
+                {en: "region", he: "אזור"},
+                {en: "regular", he: "רגיל, קבוע"},
+                {en: "relevant", he: "רלוונטי"},
+                {en: "reliable", he: "אמין"},
+                {en: "rely on", he: "לסמוך על"},
+                {en: "request", he: "בקשה, לבקש"},
+                {en: "research", he: "מחקר"},
+                {en: "result", he: "תוצאה"},
+                {en: "review", he: "סקירה, לסקור"},
+                {en: "revise", he: "לתקן, לחזור על"},
+                {en: "risk", he: "סיכון"},
+                {en: "run out of", he: "להיגמר ל"},
+                {en: "rural", he: "כפרי"},
+                {en: "salary", he: "משכורת"},
+                {en: "sample", he: "דוגמה, דגימה"},
+                {en: "seldom", he: "לעיתים רחוקות"},
+                {en: "sense", he: "חוש, תחושה"},
+                {en: "set up", he: "להקים"},
+                {en: "significant", he: "משמעותי"},
+                {en: "skilled", he: "מיומן"},
+                {en: "slight", he: "קל, קלוש"},
+                {en: "specialist", he: "מומחה"},
+                {en: "specific", he: "ספציפי"},
+                {en: "still", he: "עדיין"},
+                {en: "structure", he: "מבנה"},
+                {en: "study", he: "מחקר, ללמוד"},
+                {en: "supposed", he: "אמור"},
+                {en: "surface", he: "משטח"},
+                {en: "take advantage of", he: "לנצל"},
+                {en: "thanks to", he: "בזכות"},
+                {en: "theory", he: "תיאוריה"},
+                {en: "throw away", he: "לזרוק"},
+                {en: "transport", he: "תחבורה, להוביל"},
+                {en: "trash", he: "זבל"},
+                {en: "treatment", he: "טיפול"},
+                {en: "unfortunately", he: "למרבה הצער"},
+                {en: "unhealthy", he: "לא בריא"},
+                {en: "unique", he: "ייחודי"},
+                {en: "united", he: "מאוחד"},
+                {en: "universe", he: "יקום"},
+                {en: "unknown", he: "לא ידוע"},
+                {en: "unlike", he: "בניגוד ל"},
+                {en: "unlikely", he: "לא סביר"},
+                {en: "urban", he: "עירוני"},
+                {en: "vary", he: "להשתנות"},
+                {en: "view", he: "נוף, דעה"},
+                {en: "visible", he: "נראה לעין"},
+                {en: "vision", he: "חזון, ראייה"},
+                {en: "volume", he: "עוצמה, נפח"},
+                {en: "whom", he: "את מי, למי"},
+                {en: "wildlife", he: "חיות בר"},
+                {en: "within", he: "בתוך"},
+                {en: "worthwhile", he: "כדאי"},
+                {en: "would", he: "היה (תנאי)"}
+            ],
+            "LISTB": [
+                {en: "above", he: "מעל"},
+                {en: "account", he: "חשבון, סיפור"},
+                {en: "acquire", he: "לרכוש"},
+                {en: "age", he: "גיל, עידן"},
+                {en: "agriculture", he: "חקלאות"},
+                {en: "all of a sudden", he: "פתאום"},
+                {en: "altogether", he: "בסך הכל"},
+                {en: "anxious", he: "חרד, מודאג"},
+                {en: "apparent", he: "ברור, נראה לעין"},
+                {en: "appropriate", he: "מתאים"},
+                {en: "atmosphere", he: "אווירה, אטמוספרה"},
+                {en: "automatically", he: "אוטומטית"},
+                {en: "bad", he: "רע"},
+                {en: "be in charge", he: "להיות אחראי"},
+                {en: "be situated", he: "להיות ממוקם"},
+                {en: "behind", he: "מאחורי"},
+                {en: "believe in", he: "להאמין ב"},
+                {en: "blame", he: "להאשים"},
+                {en: "block", he: "חסימה, לחסום"},
+                {en: "brilliant", he: "מבריק, נפלא"},
+                {en: "bring up", he: "לגדל, להעלות"},
+                {en: "calculate", he: "לחשב"},
+                {en: "clothing", he: "ביגוד"},
+                {en: "competitive", he: "תחרותי"},
+                {en: "contemporary", he: "עכשווי, בן זמננו"},
+                {en: "contest", he: "תחרות"},
+                {en: "continent", he: "יבשת"},
+                {en: "copy", he: "עותק, להעתיק"},
+                {en: "criterion", he: "קריטריון"},
+                {en: "cut down", he: "לצמצם, לכרות"},
+                {en: "decade", he: "עשור"},
+                {en: "declare", he: "להכריז"},
+                {en: "degree", he: "��ואר, מעלה"},
+                {en: "deliver", he: "לספק, למסור"},
+                {en: "demanding", he: "תובעני"},
+                {en: "detect", he: "לגלות, לזהות"},
+                {en: "determine", he: "לקבוע"},
+                {en: "differ", he: "להיות שונה"},
+                {en: "disappointed", he: "מאוכזב"},
+                {en: "divide", he: "לחלק"},
+                {en: "domestic", he: "ביתי, מקומי"},
+                {en: "done", he: "גמור"},
+                {en: "double", he: "כפול"},
+                {en: "economical", he: "חסכוני"},
+                {en: "editor", he: "עורך"},
+                {en: "either way", he: "כך או כך"},
+                {en: "element", he: "יסוד, אלמנט"},
+                {en: "emerge", he: "לצוץ, להתגלות"},
+                {en: "emotion", he: "רגש"},
+                {en: "exception", he: "יוצא מן הכלל"},
+                {en: "exchange", he: "החלפה, להחליף"},
+                {en: "expected", he: "צפוי"},
+                {en: "expedition", he: "משלחת"},
+                {en: "expense", he: "הוצאה"},
+                {en: "export", he: "יצוא, לייצא"},
+                {en: "expression", he: "ביטוי"},
+                {en: "extend", he: "להרחיב, להאריך"},
+                {en: "extreme", he: "קיצוני"},
+                {en: "farther/further", he: "רחוק יותר"},
+                {en: "fed up", he: "נמאס ל"},
+                {en: "fetch", he: "להביא"},
+                {en: "final", he: "סופי"},
+                {en: "fit", he: "מתאים, כושר"},
+                {en: "generation", he: "דור"},
+                {en: "genuine", he: "אמיתי, כן"},
+                {en: "get rid of", he: "להיפטר מ"},
+                {en: "get sth wrong", he: "לטעות במשהו"},
+                {en: "get worse", he: "להחמיר"},
+                {en: "give away", he: "לתת, לחשוף"},
+                {en: "go out", he: "לצאת"},
+                {en: "hidden", he: "מוסתר"},
+                {en: "highlight", he: "להדגיש"},
+                {en: "historian", he: "היסטוריון"},
+                {en: "historic", he: "היסטורי"},
+                {en: "identical", he: "זהה"},
+                {en: "immigration", he: "הגירה"},
+                {en: "import", he: "יבוא, לייבא"},
+                {en: "impress", he: "להרשים"},
+                {en: "impression", he: "רושם"},
+                {en: "incredible", he: "מדהים, לא יאומן"},
+                {en: "indoors", he: "בפנים"},
+                {en: "infection", he: "זיהום"},
+                {en: "input", he: "קלט"},
+                {en: "inside", he: "בפנים"},
+                {en: "interaction", he: "אינטראקציה"},
+                {en: "interpret", he: "לפרש"},
+                {en: "interrupt", he: "להפריע"},
+                {en: "involvement", he: "מעורבות"},
+                {en: "issue", he: "סוגיה, גיליון"},
+                {en: "it looks like", he: "נראה ש"},
+                {en: "jam", he: "ריבה, פקק"},
+                {en: "journalist", he: "עיתונאי"},
+                {en: "judgment", he: "שיפוט"},
+                {en: "just as", he: "בדיוק כמו"},
+                {en: "justice", he: "צדק"},
+                {en: "keen", he: "נלהב"},
+                {en: "keep", he: "לשמור"},
+                {en: "kit", he: "ערכה"},
+                {en: "learn", he: "ללמוד"},
+                {en: "lecture", he: "הרצאה"},
+                {en: "light", he: "אור, קל"},
+                {en: "living", he: "מחיה, חי"},
+                {en: "logical", he: "הגיוני"},
+                {en: "look forward to", he: "לצפות בציפייה"},
+                {en: "lower", he: "להוריד, תחתון"},
+                {en: "make sense", he: "הגיוני"},
+                {en: "make up", he: "להמציא, לפצות"},
+                {en: "make up your mind", he: "להחליט"},
+                {en: "mend", he: "לתקן"},
+                {en: "mixture", he: "תערובת"},
+                {en: "monthly", he: "חודשי"},
+                {en: "mystery", he: "תעלומה"},
+                {en: "name", he: "שם, לקרוא בשם"},
+                {en: "native", he: "ילידי"},
+                {en: "neither...nor", he: "לא...ולא"},
+                {en: "nightmare", he: "סיוט"},
+                {en: "nonsense", he: "שטויות"},
+                {en: "not a word", he: "אף מילה"},
+                {en: "not until", he: "רק כאשר"},
+                {en: "occupation", he: "מקצוע, כיבוש"},
+                {en: "occupy", he: "לתפוס, לכבוש"},
+                {en: "oil", he: "שמן, נפט"},
+                {en: "on the whole", he: "בסך הכל"},
+                {en: "open", he: "פתוח, לפתוח"},
+                {en: "operate", he: "להפעיל, לנתח"},
+                {en: "organ", he: "איבר"},
+                {en: "organization", he: "ארגון"},
+                {en: "outstanding", he: "יוצא מן הכלל"},
+                {en: "part-time", he: "חלקי"},
+                {en: "patient", he: "סבלני, מטופל"},
+                {en: "peculiar", he: "מוזר, מיוחד"},
+                {en: "place", he: "מקום, לשים"},
+                {en: "point", he: "נקודה"},
+                {en: "position", he: "עמדה, מיקום"},
+                {en: "potential", he: "פוטנציאל"},
+                {en: "preference", he: "העדפה"},
+                {en: "present", he: "הווה, מתנה"},
+                {en: "pressure", he: "לחץ"},
+                {en: "prime", he: "ראשי, עיקרי"},
+                {en: "principal", he: "מנהל, עיקרי"},
+                {en: "promote", he: "לקדם"},
+                {en: "put up with", he: "לסבול"},
+                {en: "reach", he: "להגיע"},
+                {en: "reason", he: "סיבה"},
+                {en: "record", he: "שיא, להקליט"},
+                {en: "reflect", he: "לשקף"},
+                {en: "register", he: "להירשם"},
+                {en: "regret", he: "להתחרט"},
+                {en: "relate", he: "להתקשר, לספר"},
+                {en: "relax", he: "להירגע"},
+                {en: "remark", he: "הערה"},
+                {en: "remote", he: "מרוחק"},
+                {en: "replace", he: "להחליף"},
+                {en: "rescue", he: "להציל"},
+                {en: "respect", he: "כבוד, לכבד"},
+                {en: "retire", he: "לפרוש"},
+                {en: "right", he: "זכות, נכו��"},
+                {en: "role", he: "תפקיד"},
+                {en: "room", he: "חדר, מקום"},
+                {en: "rough", he: "גס, קשה"},
+                {en: "rule", he: "כלל, לשלוט"},
+                {en: "run", he: "לרוץ, לנהל"},
+                {en: "rush", he: "למהר"},
+                {en: "satisfy", he: "לספק"},
+                {en: "scale", he: "קנה מידה"},
+                {en: "scene", he: "סצנה, זירה"},
+                {en: "schedule", he: "לוח זמנים"},
+                {en: "sensitive", he: "רגיש"},
+                {en: "service", he: "שירות"},
+                {en: "set", he: "סט, לקבוע"},
+                {en: "setting", he: "סביבה, רקע"},
+                {en: "shortly", he: "בקרוב"},
+                {en: "shut down", he: "לסגור, לכבות"},
+                {en: "similarity", he: "דמיון"},
+                {en: "slow down", he: "להאט"},
+                {en: "so-called", he: "מה שנקרא"},
+                {en: "society", he: "חברה"},
+                {en: "sooner or later", he: "במוקדם או במאוחר"},
+                {en: "spectacular", he: "מרהיב"},
+                {en: "speech", he: "נאום"},
+                {en: "spoil", he: "לקלקל, לפנק"},
+                {en: "start off", he: "להתחיל"},
+                {en: "style", he: "סגנון"},
+                {en: "sum up", he: "לסכם"},
+                {en: "summary", he: "סיכום"},
+                {en: "support", he: "תמיכה, לתמוך"},
+                {en: "survive", he: "לשרוד"},
+                {en: "take into account", he: "לקחת בחשבון"},
+                {en: "take part", he: "לקחת חלק"},
+                {en: "take place", he: "להתרחש"},
+                {en: "take the opportunity", he: "לנצל את ההזדמנות"},
+                {en: "take seriously", he: "לקחת ברצינות"},
+                {en: "take responsibility", he: "לקחת אחריות"},
+                {en: "the headlines", he: "הכותרות"},
+                {en: "the heart of", he: "לב העניין"},
+                {en: "the main thing", he: "העיקר"},
+                {en: "the reality of", he: "המציאות של"},
+                {en: "theme", he: "נושא"},
+                {en: "to", he: "ל (כיוון)"},
+                {en: "to start with", he: "מלכתחילה"},
+                {en: "treasure", he: "אוצר"},
+                {en: "try", he: "לנסות"},
+                {en: "turn", he: "פנייה, תור"},
+                {en: "uncomfortable", he: "לא נוח"},
+                {en: "underneath", he: "מתחת"},
+                {en: "understand", he: "להבין"},
+                {en: "undo", he: "לבטל"},
+                {en: "unemployed", he: "מובטל"},
+                {en: "unexpected", he: "בלתי צפוי"},
+                {en: "up-to-date", he: "עדכני"},
+                {en: "urgent", he: "דחוף"},
+                {en: "use up", he: "לכלות"},
+                {en: "virtual reality", he: "מציאות מדומה"},
+                {en: "vowel", he: "תנועה (אות)"},
+                {en: "waste", he: "בזבוז, לבזבז"},
+                {en: "wealth", he: "עושר"},
+                {en: "welcome", he: "ברוך הבא"},
+                {en: "wherever", he: "בכל מקום ש"}
+            ],
+            "LISTC": [
+                {en: "on your own", he: "לבד"},
+                {en: "any minute now", he: "בכל רגע"},
+                {en: "in your twenties", he: "בשנות העשרים שלך"},
+                {en: "absorb", he: "לספוג"},
+                {en: "access", he: "גישה"},
+                {en: "ambition", he: "שאיפה"},
+                {en: "annoy", he: "להרגיז"},
+                {en: "argue", he: "להתווכח"},
+                {en: "as a matter of fact", he: "למעשה"},
+                {en: "ashamed", he: "מתבייש"},
+                {en: "aside", he: "הצידה"},
+                {en: "assure", he: "להבטיח"},
+                {en: "at his best", he: "במיטבו"},
+                {en: "attraction", he: "אטרקציה, משיכה"},
+                {en: "awareness", he: "מודעות"},
+                {en: "barely", he: "בקושי"},
+                {en: "barrier", he: "מחסום"},
+                {en: "be about to", he: "עומד ל"},
+                {en: "be out of", he: "להיגמר"},
+                {en: "beat", he: "להכות, לנצח"},
+                {en: "bend", he: "לכופף"},
+                {en: "biology", he: "ביולוגיה"},
+                {en: "bitter", he: "מר"},
+                {en: "bold", he: "נועז"},
+                {en: "bother", he: "להטריד"},
+                {en: "bottom", he: "תחתית"},
+                {en: "breeze", he: "משב רוח"},
+                {en: "brilliant", he: "מבריק"},
+                {en: "can tell", he: "יכול לדעת"},
+                {en: "capacity", he: "יכולת, קיבולת"},
+                {en: "cash", he: "מזומן"},
+                {en: "capture", he: "ללכוד"},
+                {en: "casual", he: "לא רשמי"},
+                {en: "ceremony", he: "טקס"},
+                {en: "chairperson", he: "יו\"ר"},
+                {en: "chase", he: "לרדוף"},
+                {en: "cheat", he: "לרמות"},
+                {en: "classic", he: "קלאסי"},
+                {en: "clinic", he: "מרפאה"},
+                {en: "coach", he: "מאמן"},
+                {en: "collector", he: "אספן"},
+                {en: "correspond", he: "להתכתב"},
+                {en: "costume", he: "תחפושת"},
+                {en: "courage", he: "אומץ"},
+                {en: "cover", he: "לכסות"},
+                {en: "cure", he: "לרפא, תרופה"},
+                {en: "cyberbullying", he: "בריונות רשת"},
+                {en: "cycle", he: "מחזור, לרכוב"},
+                {en: "deaf", he: "חירש"},
+                {en: "debt", he: "חוב"},
+                {en: "decorate", he: "לקשט"},
+                {en: "dedicate", he: "להקדיש"},
+                {en: "departure", he: "יציאה"},
+                {en: "deposit", he: "פיקדון"},
+                {en: "deserve", he: "להיות ראוי"},
+                {en: "destination", he: "יעד"},
+                {en: "direct", he: "ישיר"},
+                {en: "disabled", he: "נכה"},
+                {en: "dispute", he: "מחלוקת"},
+                {en: "distinguish", he: "להבחין"},
+                {en: "disturb", he: "להפריע"},
+                {en: "do a good job", he: "לעשות עבודה טובה"},
+                {en: "dozen", he: "תריסר"},
+                {en: "draft", he: "טיוטה"},
+                {en: "dramatic", he: "דרמטי"},
+                {en: "earth", he: "כדור הארץ"},
+                {en: "earthquake", he: "רעידת אדמה"},
+                {en: "elderly", he: "קשיש"},
+                {en: "enter", he: "להיכנס"},
+                {en: "episode", he: "פרק"},
+                {en: "equal", he: "שווה"},
+                {en: "escape", he: "לברוח"},
+                {en: "fare", he: "מחיר נסיעה"},
+                {en: "fire", he: "אש, לפטר"},
+                {en: "firm", he: "חברה, יציב"},
+                {en: "float", he: "לצוף"},
+                {en: "fold", he: "לקפל"},
+                {en: "follow", he: "לעקוב"},
+                {en: "for the sake of", he: "למען"},
+                {en: "formal", he: "רשמי"},
+                {en: "former", he: "לשעבר"},
+                {en: "fortune", he: "הון, מזל"},
+                {en: "free", he: "חופשי, חינם"},
+                {en: "free will", he: "בחירה חופשית"},
+                {en: "frozen", he: "קפוא"},
+                {en: "generous", he: "נדיב"},
+                {en: "get", he: "לקבל, להשיג"},
+                {en: "get in touch", he: "ליצור קשר"},
+                {en: "give in/up", he: "לוותר"},
+                {en: "give up", he: "לוותר על"},
+                {en: "go ahead", he: "להמשיך, בבקשה"},
+                {en: "grab", he: "לתפוס"},
+                {en: "grateful", he: "אסיר תודה"},
+                {en: "hardware", he: "חומרה"},
+                {en: "headquarters", he: "מטה"},
+                {en: "here you are", he: "הנה, בבקשה"},
+                {en: "hold up", he: "לעכב"},
+                {en: "honesty", he: "יושר"},
+                {en: "idiom", he: "ביטוי"},
+                {en: "in turn", he: "בתורו"},
+                {en: "incident", he: "תקרית"},
+                {en: "laugh", he: "לצחוק"},
+                {en: "layer", he: "שכבה"},
+                {en: "leave behind", he: "להשאיר מאחור"},
+                {en: "let out", he: "לשחרר"},
+                {en: "let in", he: "להכניס"},
+                {en: "light", he: "אור, קל"},
+                {en: "lightly", he: "בקלילות"},
+                {en: "liquid", he: "נוזל"},
+                {en: "lively", he: "תוסס"},
+                {en: "load", he: "עומס, לטעון"},
+                {en: "loan", he: "הלוואה"},
+                {en: "log in/on", he: "להתחבר"},
+                {en: "log off/out", he: "להתנתק"},
+                {en: "lonely", he: "בודד"},
+                {en: "look", he: "להסתכל, מראה"},
+                {en: "lose interest", he: "לאבד עניין"},
+                {en: "maker", he: "יצרן"},
+                {en: "mark", he: "סימן, ציון"},
+                {en: "marvelous", he: "נפלא"},
+                {en: "mayor", he: "ראש עיר"},
+                {en: "melt", he: "להמס"},
+                {en: "membership", he: "חברות"},
+                {en: "message", he: "הודעה"},
+                {en: "might as well", he: "אפשר גם"},
+                {en: "miss", he: "לפספס, להתגעגע"},
+                {en: "modest", he: "צנוע"},
+                {en: "mood", he: "מצב רוח"},
+                {en: "name", he: "שם"},
+                {en: "off", he: "כבוי, הנחה"},
+                {en: "offense", he: "עבירה"},
+                {en: "once in a while", he: "מדי פעם"},
+                {en: "or so", he: "בערך"},
+                {en: "organic", he: "אורגני"},
+                {en: "pace", he: "קצב"},
+                {en: "partner", he: "שותף"},
+                {en: "pause", he: "הפסקה"},
+                {en: "peaceful", he: "שליו"},
+                {en: "plot", he: "עלילה, מזימה"},
+                {en: "position", he: "עמדה, מיקום"},
+                {en: "pour", he: "לשפוך"},
+                {en: "powder", he: "אבקה"},
+                {en: "preposition", he: "מילת יחס"},
+                {en: "pride", he: "גאווה"},
+                {en: "punish", he: "להעניש"},
+                {en: "quarrel", he: "ריב"},
+                {en: "quit", he: "להפסיק, לעזוב"},
+                {en: "race", he: "מירוץ, גזע"},
+                {en: "raw", he: "גולמי"},
+                {en: "reassure", he: "להרגיע"},
+                {en: "remain calm", he: "להישאר רגוע"},
+                {en: "reserve", he: "לשמור, עתודה"},
+                {en: "server", he: "שרת"},
+                {en: "shame", he: "בושה"},
+                {en: "shaming", he: "ביוש"},
+                {en: "shelter", he: "מקלט"},
+                {en: "show up", he: "להופיע"},
+                {en: "side", he: "צד"},
+                {en: "sign", he: "שלט, סימן"},
+                {en: "signal", he: "איתות"},
+                {en: "sink", he: "כיור, לשקוע"},
+                {en: "slip", he: "להחליק"},
+                {en: "smart", he: "חכם"},
+                {en: "smooth", he: "חלק"},
+                {en: "so did we", he: "גם אנחנו"},
+                {en: "some kind of", he: "סוג של"},
+                {en: "somewhere around", he: "בסביבות"},
+                {en: "sound angry", he: "להישמע כועס"},
+                {en: "speak about", he: "לדבר על"},
+                {en: "special offer", he: "מבצע"},
+                {en: "speed", he: "מהירות"},
+                {en: "spill", he: "לשפוך"},
+                {en: "spirit", he: "רוח"},
+                {en: "spread", he: "להתפשט"},
+                {en: "stay", he: "להישאר"},
+                {en: "strengthen", he: "לחזק"},
+                {en: "strike", he: "שביתה, להכות"},
+                {en: "strong", he: "חזק"},
+                {en: "struggle", he: "מאבק"},
+                {en: "subway", he: "רכבת תחתית"},
+                {en: "suffer from", he: "לסבול מ"},
+                {en: "super", he: "סופר, מעולה"},
+                {en: "swear", he: "להישבע, לקלל"},
+                {en: "suspect", he: "חשוד, לחשוד"},
+                {en: "switch", he: "מתג, להחליף"},
+                {en: "symbol", he: "סמל"},
+                {en: "table", he: "שולחן, טבלה"},
+                {en: "take pleasure", he: "ליהנות"},
+                {en: "take sb's place", he: "לתפוס את מקומו"},
+                {en: "tear", he: "לקרוע, דמעה"},
+                {en: "term", he: "מונח, סמסטר"},
+                {en: "terminal", he: "טרמינל"},
+                {en: "that kind of thing", he: "דברים כאלה"},
+                {en: "that's it", he: "זהו"},
+                {en: "the following day", he: "ביום שלמחרת"},
+                {en: "thief", he: "גנב"},
+                {en: "tight", he: "צמוד, הדוק"},
+                {en: "tip", he: "טיפ, קצה"},
+                {en: "tired of", he: "עייף מ"},
+                {en: "tiring", he: "מעייף"},
+                {en: "touch", he: "לגעת, מגע"},
+                {en: "tough", he: "קשה, מחוספס"},
+                {en: "trade", he: "מסחר"},
+                {en: "transfer", he: "להעביר"},
+                {en: "tribe", he: "שבט"},
+                {en: "trick", he: "טריק"},
+                {en: "turn into", he: "להפוך ל"},
+                {en: "underline", he: "להדגיש"},
+                {en: "union", he: "איחוד"},
+                {en: "use", he: "שימוש"},
+                {en: "via", he: "דרך"},
+                {en: "victim", he: "קורבן"},
+                {en: "warm", he: "חם"},
+                {en: "weakness", he: "חולשה"},
+                {en: "wear out", he: "לבלות"},
+                {en: "weather forecast", he: "תחזית מזג אוויר"},
+                {en: "weigh", he: "לשקול"},
+                {en: "weird", he: "מוזר"},
+                {en: "whatever", he: "מה שלא יהיה"},
+                {en: "Who cares?", he: "למי אכפת?"},
+                {en: "wise", he: "חכם"},
+                {en: "wrap", he: "לעטוף"},
+                {en: "Yours sincerely", he: "בכבוד רב"},
+                {en: "will", he: "רצון, צוואה"}
+            ],
+            "LISTD": [
+                {en: "a little", he: "קצת"},
+                {en: "aggressive", he: "תוקפני"},
+                {en: "air force", he: "חיל אוויר"},
+                {en: "alarm", he: "אזעקה"},
+                {en: "all is well", he: "הכל בסדר"},
+                {en: "all over the place", he: "בכל מקום"},
+                {en: "ambassador", he: "שגריר"},
+                {en: "arrow", he: "חץ"},
+                {en: "artistic", he: "אמנותי"},
+                {en: "at fault", he: "אשם"},
+                {en: "bank", he: "בנק, גדה"},
+                {en: "bank account", he: "חשבון בנק"},
+                {en: "bargain", he: "מציאה"},
+                {en: "base", he: "בסיס"},
+                {en: "bay", he: "מפרץ"},
+                {en: "be expecting a baby", he: "בהריון"},
+                {en: "believe it or not", he: "תאמין או לא"},
+                {en: "bell", he: "פעמון"},
+                {en: "bench", he: "ספסל"},
+                {en: "blow up", he: "לפוצץ"},
+                {en: "boiled", he: "מבושל"},
+                {en: "brake", he: "בלם"},
+                {en: "branch", he: "ענף, סניף"},
+                {en: "brick", he: "לבנה"},
+                {en: "bucket", he: "דלי"},
+                {en: "bug", he: "חרק, באג"},
+                {en: "bull", he: "שור"},
+                {en: "bunch", he: "חבורה, אשכול"},
+                {en: "burst into tears", he: "לפרוץ בבכי"},
+                {en: "bury", he: "לקבור"},
+                {en: "butcher", he: "קצב"},
+                {en: "cab", he: "מונית"},
+                {en: "cabin", he: "בקתה"},
+                {en: "catalog", he: "קטלוג"},
+                {en: "cave", he: "מערה"},
+                {en: "certificate", he: "תעודה"},
+                {en: "charge", he: "לחייב, להטעין"},
+                {en: "check in/out", he: "להירשם/לצאת"},
+                {en: "Cheers!", he: "לחיים!"},
+                {en: "cold", he: "קר, הצטננות"},
+                {en: "collar", he: "צווארון"},
+                {en: "crash", he: "התרסקות"},
+                {en: "cross", he: "לחצות, צלב"},
+                {en: "customs", he: "מכס"},
+                {en: "date", he: "תאריך, דייט"},
+                {en: "deck", he: "סיפון"},
+                {en: "defeat", he: "להביס, תבוסה"},
+                {en: "devil", he: "שטן"},
+                {en: "diagram", he: "תרשים"},
+                {en: "difficult", he: "קשה"},
+                {en: "dishonest", he: "לא ישר"},
+                {en: "disk", he: "דיסק"},
+                {en: "divorce", he: "גירושין"},
+                {en: "Don't ask me!", he: "אל תשאל אותי!"},
+                {en: "Don't ask!", he: "אל תשאל!"},
+                {en: "dreadful", he: "נורא"},
+                {en: "drink", he: "משקה, לשתות"},
+                {en: "drive", he: "לנהוג, נסיעה"},
+                {en: "drop", he: "לזרוק, טיפה"},
+                {en: "drunk", he: "שיכור"},
+                {en: "elbow", he: "מרפק"},
+                {en: "engagement", he: "אירוסין"},
+                {en: "explode", he: "להתפוצץ"},
+                {en: "fall in love", he: "להתאהב"},
+                {en: "fasten", he: "להדק"},
+                {en: "fly", he: "לעוף, זבוב"},
+                {en: "folk", he: "עממי, אנשים"},
+                {en: "fool", he: "טיפש"},
+                {en: "for fun", he: "לשם כיף"},
+                {en: "force", he: "כוח, לאלץ"},
+                {en: "forehead", he: "מצח"},
+                {en: "forgetful", he: "שכחן"},
+                {en: "garage", he: "מוסך"},
+                {en: "gate", he: "שער"},
+                {en: "gentleman", he: "ג'נטלמן"},
+                {en: "get away with", he: "להתחמק מ"},
+                {en: "get in", he: "להיכנס"},
+                {en: "ghost", he: "רוח רפאים"},
+                {en: "giant", he: "ענק"},
+                {en: "grow tired", he: "להתעייף"},
+                {en: "hang about/around", he: "להסתובב"},
+                {en: "hang out", he: "לבלות"},
+                {en: "harbor", he: "נמל"},
+                {en: "heaven", he: "גן עדן"},
+                {en: "heel", he: "עקב"},
+                {en: "hell", he: "גיהינום"},
+                {en: "horror", he: "אימה"},
+                {en: "hunt", he: "לצוד"},
+                {en: "hurry up", he: "למהר"},
+                {en: "hut", he: "צריף"},
+                {en: "immoral", he: "לא מוסרי"},
+                {en: "in tears", he: "בדמעות"},
+                {en: "initial", he: "ראשוני"},
+                {en: "insult", he: "עלבון, להעליב"},
+                {en: "insurance", he: "ביטוח"},
+                {en: "iron", he: "ברזל, מגהץ"},
+                {en: "jog", he: "לרוץ"},
+                {en: "jump", he: "לקפוץ"},
+                {en: "jury", he: "חבר מושבעים"},
+                {en: "knit", he: "לסרוג"},
+                {en: "laser", he: "לייזר"},
+                {en: "lead", he: "להוביל, עופרת"},
+                {en: "learning", he: "למידה"},
+                {en: "lightning", he: "ברק"},
+                {en: "literary", he: "ספרותי"},
+                {en: "loaf", he: "כיכר לחם"},
+                {en: "loose", he: "רפוי"},
+                {en: "madam", he: "גברתי"},
+                {en: "magnificent", he: "מפואר"},
+                {en: "make", he: "לעשות"},
+                {en: "marriage", he: "נישואין"},
+                {en: "mask", he: "מסכה"},
+                {en: "mate", he: "חבר"},
+                {en: "mess", he: "בלגן"},
+                {en: "mineral water", he: "מים ��ינרליים"},
+                {en: "mix up", he: "לבלבל"},
+                {en: "monster", he: "מפלצת"},
+                {en: "moral", he: "מוסרי, מוסר השכל"},
+                {en: "naked", he: "עירום"},
+                {en: "nasty", he: "מגעיל"},
+                {en: "navy", he: "חיל הים"},
+                {en: "neat", he: "מסודר"},
+                {en: "next door", he: "שכן"},
+                {en: "not believe your eyes", he: "לא להאמין לעיניים"},
+                {en: "nut", he: "אגוז"},
+                {en: "on a diet", he: "בדיאטה"},
+                {en: "on board", he: "על הסיפון"},
+                {en: "on display", he: "בתצוגה"},
+                {en: "on duty", he: "בתורנות"},
+                {en: "orchestra", he: "תזמורת"},
+                {en: "pack", he: "לארוז, חבילה"},
+                {en: "painful", he: "כואב"},
+                {en: "pale", he: "חיוור"},
+                {en: "passage", he: "מעבר, קטע"},
+                {en: "pavement", he: "מדרכה"},
+                {en: "peak", he: "פסגה"},
+                {en: "penalty", he: "עונש, פנדל"},
+                {en: "pill", he: "גלולה"},
+                {en: "pin", he: "סיכה"},
+                {en: "pity", he: "חבל, רחמים"},
+                {en: "pray", he: "להתפלל"},
+                {en: "pregnant", he: "בהריון"},
+                {en: "priest", he: "כומר"},
+                {en: "propose", he: "להציע נישואין"},
+                {en: "pump", he: "משאבה"},
+                {en: "queue", he: "תור"},
+                {en: "racket", he: "מחבט"},
+                {en: "rainbow", he: "קשת"},
+                {en: "range", he: "טווח"},
+                {en: "refund", he: "החזר"},
+                {en: "regards", he: "ד\"ש"},
+                {en: "republic", he: "רפובליקה"},
+                {en: "resort", he: "אתר נופש"},
+                {en: "rob", he: "לשדוד"},
+                {en: "romantic", he: "רומנטי"},
+                {en: "rope", he: "חבל"},
+                {en: "rub out", he: "למחוק"},
+                {en: "rubber", he: "גומי"},
+                {en: "rubbish", he: "זבל, שטויות"},
+                {en: "rude", he: "גס רוח"},
+                {en: "scandal", he: "שערורייה"},
+                {en: "scratch", he: "לגרד, שריטה"},
+                {en: "sculpture", he: "פיסול"},
+                {en: "see off", he: "ללוות"},
+                {en: "selfish", he: "אנוכי"},
+                {en: "separate", he: "נפרד, להפריד"},
+                {en: "shade", he: "צל"},
+                {en: "shake your head", he: "לנענע בראש"},
+                {en: "shave", he: "להתגלח"},
+                {en: "shore", he: "חוף"},
+                {en: "show sb around", he: "לסייר עם"},
+                {en: "shut up", he: "לשתוק"},
+                {en: "sidewalk", he: "מדרכה"},
+                {en: "sigh", he: "להאנח"},
+                {en: "silk", he: "משי"},
+                {en: "sit up straight", he: "לשבת ישר"},
+                {en: "slave", he: "עבד"},
+                {en: "sleeve", he: "שרוול"},
+                {en: "sore", he: "כואב"},
+                {en: "split up", he: "להיפרד"},
+                {en: "sportsman", he: "ספורטאי"},
+                {en: "spot", he: "נקודה, לזהות"},
+                {en: "spy", he: "מרגל"},
+                {en: "squeeze", he: "לסחוט"},
+                {en: "stare", he: "לבהות"},
+                {en: "stay over", he: "להישאר ללילה"},
+                {en: "stay up", he: "להישאר ער"},
+                {en: "steep", he: "תלול"},
+                {en: "step back", he: "לסגת"},
+                {en: "step on", he: "לדרוך על"},
+                {en: "stick", he: "מקל, להדביק"},
+                {en: "strangely enough", he: "למרבה הפליאה"},
+                {en: "stream", he: "נחל, זרם"},
+                {en: "stretch", he: "למתוח"},
+                {en: "strict", he: "קפדן"},
+                {en: "string", he: "חוט, מיתר"},
+                {en: "stripe", he: "פס"},
+                {en: "suit", he: "חליפה, להתאים"},
+                {en: "swear", he: "להישבע"},
+                {en: "sweep", he: "לטאטא"},
+                {en: "sword", he: "חרב"},
+                {en: "tail", he: "זנב"},
+                {en: "take a risk", he: "לקחת סיכון"},
+                {en: "take sb out", he: "להוציא מישהו"},
+                {en: "tap", he: "ברז, להקיש"},
+                {en: "temple", he: "מקדש"},
+                {en: "territory", he: "טריטוריה"},
+                {en: "terror", he: "טרור"},
+                {en: "tie up", he: "לקשור"},
+                {en: "tournament", he: "טורניר"},
+                {en: "track", he: "מסלול"},
+                {en: "tragedy", he: "טרגדיה"},
+                {en: "triangle", he: "משולש"},
+                {en: "tube", he: "שפופרת"},
+                {en: "undressed", he: "לא לבוש"},
+                {en: "unpack", he: "לפרוק"},
+                {en: "van", he: "טנדר"},
+                {en: "verse", he: "פסוק, בית שיר"},
+                {en: "weapon", he: "נשק"},
+                {en: "web", he: "רשת"},
+                {en: "wheat", he: "חיטה"}
+            ]
+        };
+
+// ===== READING PASSAGES =====
+const readingPassages = [
+{id:1,title:"The Impact of Social Media on Teenagers",topic:"Technology & Society",difficulty:"Module E",
+text:`<p>Social media has become an essential part of daily life for millions of teenagers around the world. Platforms like Instagram, TikTok, and Snapchat allow young people to connect with friends, share experiences, and express themselves creatively. However, researchers have raised serious concerns about the effects of excessive social media use on adolescent mental health.</p>
+<p>A recent study conducted by the University of Cambridge followed 84,000 teenagers over a period of seven years. The findings revealed that teenagers who spent more than three hours a day on social media were twice as likely to experience symptoms of anxiety and depression compared to those who used it for less than one hour. Dr. Sarah Mitchell, the lead researcher, stated that "the constant comparison with others and the pressure to present a perfect image online creates unrealistic expectations that can be devastating for young minds."</p>
+<p>Despite these concerns, not all experts agree that social media is entirely harmful. Professor James Walker from Stanford University argues that social media can provide valuable support networks for teenagers who feel isolated, particularly those in rural areas or those dealing with issues such as bullying. "For many young people, online communities offer a sense of belonging that they cannot find in their immediate environment," he explained.</p>
+<p>In response to these findings, several countries have introduced regulations aimed at protecting young users. Australia recently passed a law banning children under 16 from using social media platforms, while the European Union has proposed strict guidelines requiring platforms to implement age verification systems. Critics of these measures argue that bans are difficult to enforce and may push teenagers toward less regulated online spaces.</p>
+<p>Ultimately, experts suggest that a balanced approach is needed. Parents should maintain open communication with their children about online experiences, schools should incorporate digital literacy into their curricula, and technology companies should take greater responsibility for the well-being of their youngest users.</p>`,
+questions:[
+{type:"multiple",text:"According to the Cambridge study, teenagers who use social media for more than three hours daily are:",options:["a) Less likely to feel anxious","b) Twice as likely to experience anxiety and depression","c) Three times more likely to feel isolated","d) More creative than other teenagers"],correct:1,explanation:"The text states: 'teenagers who spent more than three hours a day on social media were twice as likely to experience symptoms of anxiety and depression.'"},
+{type:"multiple",text:"Professor James Walker believes that social media:",options:["a) Should be completely banned for teenagers","b) Is the main cause of bullying among teens","c) Can help isolated teenagers find a sense of belonging","d) Has no positive effects on young people"],correct:2,explanation:"Walker argues that 'online communities offer a sense of belonging that they cannot find in their immediate environment.'"},
+{type:"multiple",text:"What does the word 'devastating' (paragraph 2) most likely mean?",options:["a) Encouraging","b) Extremely harmful","c) Slightly annoying","d) Completely irrelevant"],correct:1,explanation:"'Devastating' means extremely harmful or destructive."},
+{type:"multiple",text:"Critics of social media bans argue that:",options:["a) Bans will solve the problem completely","b) All countries should follow Australia's example","c) Bans are hard to enforce and may lead to worse outcomes","d) Only the EU's approach is effective"],correct:2,explanation:"Critics argue 'bans are difficult to enforce and may push teenagers toward less regulated online spaces.'"},
+{type:"multiple",text:"What is the main idea of the last paragraph?",options:["a) Parents should monitor their children's phones","b) Technology companies are the only ones responsible","c) A balanced, multi-sided approach is the best solution","d) Schools should ban phones in classrooms"],correct:2,explanation:"The final paragraph suggests a balanced approach involving parents, schools, and technology companies."}
+]},
+{id:2,title:"The Rise of Artificial Intelligence in Medicine",topic:"Science & Health",difficulty:"Module G",
+text:`<p>Artificial intelligence is transforming the way doctors diagnose and treat diseases. In hospitals around the world, AI-powered systems are being used to analyze medical images, predict patient outcomes, and even assist in surgical procedures. While the technology offers tremendous promise, it also raises important ethical questions about the future of healthcare.</p>
+<p>One of the most significant advances has been in the field of radiology. AI algorithms can now detect certain types of cancer in X-rays and CT scans with greater accuracy than human doctors. A study published in the journal Nature found that an AI system developed by Google Health was able to identify breast cancer in mammograms with 11.5% fewer false negatives than radiologists. This means that the AI caught cancers that human doctors missed, potentially saving lives through earlier detection.</p>
+<p>However, the integration of AI into medicine is not without challenges. One major concern is the issue of bias in AI systems. Since these algorithms are trained on existing medical data, they may reflect historical inequalities in healthcare. For example, if an AI system is primarily trained on data from patients of one ethnic background, it may perform less accurately when diagnosing patients from different backgrounds.</p>
+<p>Another challenge is the question of responsibility. When an AI system makes a diagnostic error that harms a patient, who is liable — the doctor who relied on the AI's recommendation, the hospital that purchased the system, or the company that developed it? Legal experts say that current regulations are insufficient to address these complex questions.</p>
+<p>Despite these challenges, most medical professionals believe that AI will play an increasingly important role in healthcare. Rather than replacing doctors, AI is expected to serve as a powerful tool that enhances human judgment. As Dr. Lisa Chen puts it: "AI won't replace doctors, but doctors who use AI will replace those who don't."</p>`,
+questions:[
+{type:"multiple",text:"According to the Nature study, Google Health's AI system:",options:["a) Replaced all radiologists in the study","b) Had 11.5% more false negatives than doctors","c) Detected breast cancer more accurately than human doctors","d) Could only analyze CT scans"],correct:2,explanation:"The AI had '11.5% fewer false negatives than radiologists' — meaning it detected cancer more accurately."},
+{type:"multiple",text:"The problem of bias in AI medical systems occurs because:",options:["a) AI systems are intentionally designed to be biased","b) The training data may not represent all patient populations equally","c) Doctors refuse to share data","d) AI cannot process data from different ethnic groups"],correct:1,explanation:"AI trained 'primarily on data from patients of one ethnic background' may perform less accurately on others."},
+{type:"multiple",text:"The issue of liability in AI-assisted medicine refers to:",options:["a) Who should pay for AI technology","b) Who is responsible when AI makes a mistake that harms a patient","c) Which hospitals can afford AI","d) How to train AI faster"],correct:1,explanation:"The text discusses 'when an AI system makes a diagnostic error that harms a patient, who is liable.'"},
+{type:"multiple",text:"Dr. Lisa Chen's quote suggests that:",options:["a) AI will completely replace human doctors","b) Doctors should avoid using AI technology","c) Doctors who adopt AI will have an advantage over those who don't","d) Only cardiologists need AI tools"],correct:2,explanation:"'Doctors who use AI will replace those who don't' — adopting AI gives doctors an advantage."},
+{type:"multiple",text:"What is the author's overall tone in this passage?",options:["a) Completely against AI in medicine","b) Balanced — presenting both benefits and challenges","c) Enthusiastically supportive without criticism","d) Humorous and light-hearted"],correct:1,explanation:"The passage presents both the 'tremendous promise' and the 'challenges' of AI in medicine."}
+]},
+{id:3,title:"The Hidden Cost of Fast Fashion",topic:"Environment",difficulty:"Module E",
+text:`<p>Every year, approximately 92 million tons of textile waste end up in landfills worldwide. The fast fashion industry, which produces cheap, trendy clothing at an extraordinary speed, is one of the largest contributors to environmental pollution.</p>
+<p>Fast fashion brands release new collections every few weeks, encouraging consumers to buy more and discard clothing after wearing it only a handful of times. The average American now purchases about 68 garments per year — five times more than in 1980. The fashion industry is responsible for approximately 10% of global carbon emissions, more than international flights and shipping combined.</p>
+<p>The environmental damage extends beyond carbon emissions. Producing a single cotton T-shirt requires about 2,700 liters of water. Additionally, synthetic fabrics like polyester release microplastics when washed, which eventually make their way into oceans, harming marine life and entering the food chain.</p>
+<p>In response, a growing movement is promoting "slow fashion." This approach encourages people to buy fewer, higher-quality garments that last longer, to repair clothing instead of throwing it away, and to purchase second-hand items. Some brands have also begun using recycled materials and implementing take-back programs.</p>
+<p>While individual consumer choices matter, experts emphasize that systemic change is also necessary. Governments should introduce regulations that hold fashion companies accountable, and the industry itself must invest in sustainable production methods.</p>`,
+questions:[
+{type:"multiple",text:"How many tons of textile waste end up in landfills each year?",options:["a) 68 million","b) 92 million","c) 10 million","d) 2,700 million"],correct:1,explanation:"'Approximately 92 million tons of textile waste end up in landfills worldwide.'"},
+{type:"multiple",text:"The expression 'a handful of times' (paragraph 2) means:",options:["a) With their hands","b) Very many times","c) Only a few times","d) Once a week"],correct:2,explanation:"'A handful of times' is an idiom meaning a small number of times."},
+{type:"multiple",text:"The fashion industry produces more carbon emissions than:",options:["a) The automobile industry","b) Power plants worldwide","c) International flights and shipping combined","d) All other industries"],correct:2,explanation:"'Approximately 10% of global carbon emissions, more than international flights and shipping combined.'"},
+{type:"multiple",text:"The 'slow fashion' movement encourages all of the following EXCEPT:",options:["a) Buying fewer, higher-quality clothes","b) Repairing damaged clothing","c) Buying new trendy items every week","d) Purchasing second-hand items"],correct:2,explanation:"Slow fashion promotes buying less and higher quality — the opposite of buying new trendy items weekly."},
+{type:"multiple",text:"The main purpose of this passage is to:",options:["a) Advertise slow fashion brands","b) Inform readers about the environmental impact of fast fashion and suggest solutions","c) Compare prices","d) Explain how clothing is manufactured"],correct:1,explanation:"The passage describes the problem (environmental damage) and presents solutions (slow fashion, regulations)."}
+]},
+{id:4,title:"Sleep Deprivation Among Students",topic:"Health & Education",difficulty:"Module G",
+text:`<p>It is no secret that many students do not get enough sleep. According to the National Sleep Foundation, teenagers need between eight and ten hours of sleep per night, yet more than 70% of high school students regularly sleep less than seven hours. This widespread sleep deprivation has significant consequences for academic performance, physical health, and emotional well-being.</p>
+<p>Research has consistently demonstrated a strong connection between sleep and learning. During sleep, the brain consolidates memories and processes information. Students who are sleep-deprived have difficulty concentrating, struggle to retain new information, and perform worse on tests. A study at the University of Minnesota found that students who started school one hour later showed significant improvements in grades, attendance, and overall mood.</p>
+<p>The causes of student sleep deprivation are varied. Heavy homework loads, early school start times, and late-night screen use all contribute. The blue light emitted by smartphones suppresses the production of melatonin, a hormone that helps regulate sleep.</p>
+<p>Some school districts have begun pushing back start times. California became the first state to pass a law requiring high schools to start no earlier than 8:30 a.m. Early results have been encouraging — students reported feeling more alert, less stressed, and more engaged.</p>
+<p>Health experts recommend maintaining a consistent sleep schedule, avoiding caffeine after 2 p.m., creating a dark and quiet sleeping environment, and putting away electronic devices at least one hour before bedtime.</p>`,
+questions:[
+{type:"multiple",text:"According to the National Sleep Foundation, teenagers need:",options:["a) Six to seven hours of sleep","b) Seven to eight hours","c) Eight to ten hours","d) More than ten hours"],correct:2,explanation:"'Teenagers need between eight and ten hours of sleep per night.'"},
+{type:"multiple",text:"The University of Minnesota study found that later school start times led to:",options:["a) No significant changes","b) Improvements only in grades","c) Improvements in grades, attendance, and mood","d) More homework"],correct:2,explanation:"Students 'showed significant improvements in grades, attendance, and overall mood.'"},
+{type:"multiple",text:"Blue light from screens affects sleep by:",options:["a) Making students' eyes tired","b) Reducing the production of melatonin","c) Increasing brain activity","d) Causing headaches"],correct:1,explanation:"'Blue light... suppresses the production of melatonin.'"},
+{type:"multiple",text:"California's law requires high schools to start no earlier than:",options:["a) 7:30 a.m.","b) 8:00 a.m.","c) 8:30 a.m.","d) 9:00 a.m."],correct:2,explanation:"California passed a law 'requiring high schools to start no earlier than 8:30 a.m.'"},
+{type:"multiple",text:"Which is NOT mentioned as a strategy for better sleep?",options:["a) Consistent sleep schedule","b) Exercising right before bed","c) Avoiding caffeine after 2 p.m.","d) Putting away devices before bed"],correct:1,explanation:"The text does not mention exercising before bed."}
+]},
+{id:5,title:"The Future of Education",topic:"Education & Technology",difficulty:"Module E",
+text:`<p>For decades, classrooms around the world looked remarkably similar: rows of desks, a teacher at the front, and students copying notes from a blackboard. However, the way children learn is undergoing a dramatic transformation. Technology, new research about the brain, and changing job markets are reshaping education in ways that would have been unimaginable just twenty years ago.</p>
+<p>One of the biggest changes is the rise of personalized learning. Instead of teaching every student the same material at the same pace, schools are increasingly using software that adapts to each student's level. If a student struggles with a particular concept, the program provides additional exercises. If the student masters a topic quickly, the program moves on. Supporters of this approach claim that it allows students to learn more efficiently and reduces frustration.</p>
+<p>Another significant trend is the emphasis on skills rather than memorization. Employers today value critical thinking, creativity, and teamwork more than the ability to recall facts. As a result, many schools are shifting toward project-based learning, where students work together to solve real-world problems. For instance, instead of simply reading about climate change, students might design a plan to reduce their school's carbon footprint.</p>
+<p>Online education has also expanded access to learning. Students in remote villages can now take courses from top universities through platforms like Coursera and Khan Academy. During the COVID-19 pandemic, millions of students worldwide attended classes online, proving that distance learning can be effective — though it also highlighted the digital divide between those who have internet access and those who do not.</p>
+<p>Despite these advances, experts warn that technology should complement teachers, not replace them. Studies consistently show that the relationship between a teacher and a student is one of the most important factors in academic success. The future of education, most agree, lies in combining the best of human teaching with the power of technology.</p>`,
+questions:[
+{type:"multiple",text:"What is the main idea of this passage?",options:["a) Traditional education is better than modern education","b) Education is changing due to technology, research, and job market demands","c) Online learning should replace all classroom teaching","d) Teachers are no longer necessary in modern schools"],correct:1,explanation:"The passage describes how technology, brain research, and changing job markets are transforming education, while emphasizing that teachers remain important."},
+{type:"multiple",text:"According to the passage, personalized learning means:",options:["a) Every student studies the same material at the same speed","b) Students choose their own teachers","c) Software adapts to each student's individual level and pace","d) Students only learn subjects they enjoy"],correct:2,explanation:"The text states that personalized learning uses 'software that adapts to each student's level' rather than teaching everyone 'the same material at the same pace.'"},
+{type:"multiple",text:"The word 'complement' (paragraph 5) most likely means:",options:["a) Replace completely","b) Work together with and enhance","c) Compete against","d) Criticize"],correct:1,explanation:"'Complement' means to add to something in a way that improves it. The passage says technology should work alongside teachers, not replace them."},
+{type:"multiple",text:"What problem did online education reveal during the pandemic?",options:["a) Students prefer classrooms","b) Teachers cannot use computers","c) The gap between those with and without internet access","d) Online courses are too expensive"],correct:2,explanation:"The passage mentions that online learning 'highlighted the digital divide between those who have internet access and those who do not.'"},
+{type:"multiple",text:"Which of the following is NOT mentioned as a skill valued by modern employers?",options:["a) Critical thinking","b) Memorization of facts","c) Creativity","d) Teamwork"],correct:1,explanation:"The passage states that employers value 'critical thinking, creativity, and teamwork more than the ability to recall facts.' Memorization is what employers value LESS."}
+]},
+
+{id:6,title:"The Global Water Crisis",topic:"Environment & Society",difficulty:"Module E",
+text:`<p>Water is essential for life, yet nearly two billion people worldwide lack access to clean, safe drinking water. As the global population grows and climate change intensifies, experts warn that the water crisis could become one of the most serious challenges of the twenty-first century.</p>
+<p>The problem is not simply a shortage of water on Earth. In fact, our planet contains vast amounts of water — but 97% of it is saltwater in the oceans, and much of the remaining freshwater is locked in glaciers and ice caps. Only about 1% of the world's water is readily available for human use. Making matters worse, this limited supply is unevenly distributed. Countries like Brazil and Canada have abundant freshwater, while regions in the Middle East and North Africa face severe scarcity.</p>
+<p>Agriculture is by far the largest consumer of freshwater, accounting for approximately 70% of global water use. Growing enough food to feed the world's population requires enormous quantities of water. For example, producing a single kilogram of beef requires roughly 15,000 liters of water. As the demand for food increases with population growth, the pressure on water resources is expected to intensify.</p>
+<p>Pollution further reduces the amount of usable water. Industrial waste, agricultural chemicals, and untreated sewage contaminate rivers and groundwater in many developing countries. The World Health Organization estimates that contaminated water causes more than 500,000 deaths from diarrhea each year, most of them children under five.</p>
+<p>Solutions to the water crisis exist but require significant investment and cooperation. Desalination — removing salt from seawater — is already used in countries like Israel and Saudi Arabia. Water recycling, better irrigation techniques, and reducing food waste can all help conserve this precious resource. However, experts emphasize that governments, businesses, and individuals must all take action before it is too late.</p>`,
+questions:[
+{type:"multiple",text:"According to the passage, approximately how much of the world's water is available for human use?",options:["a) 97%","b) 3%","c) About 1%","d) 70%"],correct:2,explanation:"The passage states that '97% of it is saltwater' and much of the freshwater is in glaciers, leaving 'only about 1% of the world's water readily available for human use.'"},
+{type:"multiple",text:"The word 'scarcity' (paragraph 2) most likely means:",options:["a) Abundance","b) A severe lack or shortage","c) Pollution","d) Distribution"],correct:1,explanation:"'Scarcity' means an insufficient amount or shortage. The context contrasts countries with 'abundant freshwater' against regions that 'face severe scarcity.'"},
+{type:"multiple",text:"Which sector uses the most freshwater globally?",options:["a) Industry","b) Households","c) Agriculture","d) Energy production"],correct:2,explanation:"The passage clearly states that 'agriculture is by far the largest consumer of freshwater, accounting for approximately 70% of global water use.'"},
+{type:"multiple",text:"According to the World Health Organization, contaminated water causes:",options:["a) Over 500,000 deaths yearly, mostly children","b) Exactly 1 million deaths per year","c) Health problems only in Africa","d) Problems only in cities"],correct:0,explanation:"The text states that 'contaminated water causes more than 500,000 deaths from diarrhea each year, most of them children under five.'"},
+{type:"multiple",text:"The passage suggests that solving the water crisis requires:",options:["a) Only government action","b) Building more dams","c) Cooperation among governments, businesses, and individuals","d) Stopping all agriculture"],correct:2,explanation:"The final paragraph emphasizes that 'governments, businesses, and individuals must all take action' — a combined effort from multiple parties."}
+]}
+];
+
+// ===== GRAMMAR DATA =====
+const grammarTopics = [
+{id:"tenses",title:"Tenses (זמנים)",desc:"Present Simple, Past Simple, Present Perfect, Past Perfect, Future",color:"var(--purple)",
+lesson:`
+<div class="lesson-section">
+<h3>📘 מה זה Tenses?</h3>
+<p>ב-Tenses (זמנים) אנחנו מדברים על <strong>מתי</strong> הפעולה קורה. באנגלית יש כמה זמנים עיקריים שחשוב מאוד לדעת לבגרות:</p>
+</div>
+
+<div class="lesson-section">
+<h3>🔵 Present Simple — הווה פשוט</h3>
+<p><strong>מתי משתמשים?</strong> עובדות כלליות, הרגלים, דברים שקורים באופן קבוע.</p>
+<table class="grammar-table">
+<tr><th>מבנה</th><th>דוגמה</th><th>תרגום</th></tr>
+<tr><td>Subject + V1 (base form)</td><td class="example-cell">She <strong>works</strong> in a hospital.</td><td>היא עובדת בבית חולים.</td></tr>
+<tr><td>Subject + don't/doesn't + V1</td><td class="example-cell">They <strong>don't like</strong> coffee.</td><td>הם לא אוהבים קפה.</td></tr>
+<tr><td>Do/Does + Subject + V1?</td><td class="example-cell"><strong>Does</strong> he <strong>play</strong> football?</td><td>האם הוא משחק כדורגל?</td></tr>
+</table>
+<div class="tip-box"><strong>💡 שים לב!</strong><p>בגוף שלישי (he/she/it) מוסיפים <strong>s</strong> לפועל: he work<strong>s</strong>, she go<strong>es</strong></p></div>
+<p><strong>מילות סימן:</strong> always, usually, often, sometimes, never, every day/week/year</p>
+</div>
+
+<div class="lesson-section">
+<h3>🔴 Past Simple — עבר פשוט</h3>
+<p><strong>מתי משתמשים?</strong> פעולה שהסתיימה בעבר, בזמן ידוע.</p>
+<table class="grammar-table">
+<tr><th>מבנה</th><th>דוגמה</th><th>תרגום</th></tr>
+<tr><td>Subject + V2 (past form)</td><td class="example-cell">I <strong>visited</strong> London last year.</td><td>ביקרתי בלונדון בשנה שעברה.</td></tr>
+<tr><td>Subject + didn't + V1</td><td class="example-cell">She <strong>didn't come</strong> to the party.</td><td>היא לא באה למסיבה.</td></tr>
+<tr><td>Did + Subject + V1?</td><td class="example-cell"><strong>Did</strong> you <strong>see</strong> the movie?</td><td>ראית את הסרט?</td></tr>
+</table>
+<p><strong>מילות סימן:</strong> yesterday, last week/month/year, ago, in 2020, when I was young</p>
+<div class="tip-box"><strong>💡 פעלים יוצאי דופן (irregular verbs):</strong><p>go → went, see → saw, eat → ate, take → took, write → wrote, give → gave, come → came</p></div>
+</div>
+
+<div class="lesson-section">
+<h3>🟢 Present Perfect — הווה מושלם</h3>
+<p><strong>מתי משתמשים?</strong> פעולה שהתחילה בעבר ועדיין רלוונטית להווה, או שקרתה בזמן לא מוגדר בעבר.</p>
+<table class="grammar-table">
+<tr><th>מבנה</th><th>דוגמה</th><th>תרגום</th></tr>
+<tr><td>Subject + have/has + V3</td><td class="example-cell">I <strong>have lived</strong> here since 2015.</td><td>אני גר פה מאז 2015.</td></tr>
+<tr><td>Subject + haven't/hasn't + V3</td><td class="example-cell">She <strong>hasn't finished</strong> yet.</td><td>היא עדיין לא סיימה.</td></tr>
+<tr><td>Have/Has + Subject + V3?</td><td class="example-cell"><strong>Have</strong> you ever <strong>been</strong> to Japan?</td><td>היית פעם ביפן?</td></tr>
+</table>
+<p><strong>מילות סימן:</strong> since, for, already, yet, ever, never, just, recently, so far</p>
+<div class="example-box">
+<p><span class="correct-ex">✓ I have lived here since 2015.</span> (עדיין גר כאן — Present Perfect)</p>
+<p><span class="wrong-ex">✗ I lived here since 2015.</span> (שגוי! since = Present Perfect)</p>
+</div>
+</div>
+
+<div class="lesson-section">
+<h3>🟡 Past Perfect — עבר מושלם</h3>
+<p><strong>מתי משתמשים?</strong> פעולה שקרתה <strong>לפני</strong> פעולה אחרת בעבר. "העבר של העבר".</p>
+<table class="grammar-table">
+<tr><th>מבנה</th><th>דוגמה</th><th>תרגום</th></tr>
+<tr><td>Subject + had + V3</td><td class="example-cell">When I arrived, the movie <strong>had already started</strong>.</td><td>כשהגעתי, הסרט כבר התחיל.</td></tr>
+</table>
+<p><strong>מילות סימן:</strong> by the time, before, after, already, when (+ Past Simple)</p>
+<div class="tip-box"><strong>💡 טריק לבגרות:</strong><p>אם יש שני אירועים בעבר, הראשון שקרה הוא ב-<strong>Past Perfect</strong> והשני ב-<strong>Past Simple</strong>.</p></div>
+</div>
+
+<div class="lesson-section">
+<h3>🟣 Future — עתיד</h3>
+<table class="grammar-table">
+<tr><th>מבנה</th><th>שימוש</th><th>דוגמה</th></tr>
+<tr><td>will + V1</td><td>החלטה ספונטנית, חיזוי</td><td class="example-cell">I think it <strong>will rain</strong> tomorrow.</td></tr>
+<tr><td>be going to + V1</td><td>תכנון, כוונה, ראיה</td><td class="example-cell">Look at those clouds! It <strong>is going to rain</strong>.</td></tr>
+</table>
+</div>
+`,
+exercises:[
+{q:"She ___ in this school since 2019.",opts:["teaches","taught","has taught","had taught"],correct:2},
+{q:"I ___ the movie last night. It was amazing.",opts:["see","saw","have seen","had seen"],correct:1},
+{q:"By the time we arrived, the concert ___.",opts:["started","starts","has started","had started"],correct:3},
+{q:"He ___ to work every day by bus.",opts:["goes","went","has gone","is going"],correct:0},
+{q:"They ___ already ___ dinner when I called.",opts:["have / eaten","had / eaten","were / eating","are / eating"],correct:1},
+{q:"We ___ a new house next year.",opts:["buy","bought","will buy","have bought"],correct:2},
+{q:"I ___ never ___ sushi before I went to Japan.",opts:["have / tried","had / tried","was / trying","did / try"],correct:1},
+{q:"Look at those clouds! It ___ rain.",opts:["will","is going to","was going to","has"],correct:1},
+{q:"She ___ three books so far this month.",opts:["reads","read","has read","had read"],correct:2},
+{q:"While I ___ for the bus, it started raining.",opts:["wait","waited","was waiting","have waited"],correct:2}
+]},
+{id:"passive",title:"Passive Voice (סביל)",desc:"Active vs. Passive — כל הזמנים בסביל",color:"var(--green)",
+lesson:`
+<div class="lesson-section">
+<h3>📘 מה זה Passive Voice?</h3>
+<p>ב-<strong>Active</strong> (פעיל) — הנושא עושה את הפעולה: <em>The dog bit the man.</em></p>
+<p>ב-<strong>Passive</strong> (סביל) — הנושא מקבל את הפעולה: <em>The man was bitten by the dog.</em></p>
+<p>משתמשים ב-Passive כשהפעולה יותר חשובה ממי שעשה אותה, או כשלא ידוע מי עשה.</p>
+</div>
+
+<div class="lesson-section">
+<h3>🔧 המבנה: be + V3 (past participle)</h3>
+<table class="grammar-table">
+<tr><th>זמן</th><th>Active</th><th>Passive</th></tr>
+<tr><td>Present Simple</td><td>They <strong>clean</strong> the office.</td><td class="example-cell">The office <strong>is cleaned</strong>.</td></tr>
+<tr><td>Past Simple</td><td>They <strong>cleaned</strong> the office.</td><td class="example-cell">The office <strong>was cleaned</strong>.</td></tr>
+<tr><td>Present Perfect</td><td>They <strong>have cleaned</strong> the office.</td><td class="example-cell">The office <strong>has been cleaned</strong>.</td></tr>
+<tr><td>Future (will)</td><td>They <strong>will clean</strong> the office.</td><td class="example-cell">The office <strong>will be cleaned</strong>.</td></tr>
+<tr><td>Modal (must/can)</td><td>They <strong>must clean</strong> the office.</td><td class="example-cell">The office <strong>must be cleaned</strong>.</td></tr>
+<tr><td>Present Continuous</td><td>They <strong>are cleaning</strong> the office.</td><td class="example-cell">The office <strong>is being cleaned</strong>.</td></tr>
+</table>
+</div>
+
+<div class="lesson-section">
+<h3>💡 מתי משתמשים ב-Passive בבגרות?</h3>
+<div class="tip-box"><strong>טיפ חשוב!</strong>
+<p>בבגרות, Passive מופיע הרבה בהבנת הנקרא ובשאלות דקדוק. שים לב למבנה <strong>be + V3</strong> — אם רואים את זה, זה סביל!</p>
+</div>
+<div class="example-box">
+<p><span class="correct-ex">✓ The bridge was built in 1990.</span> (Passive — מישהו בנה אותו)</p>
+<p><span class="wrong-ex">✗ The bridge built in 1990.</span> (חסר be!)</p>
+<p><span class="correct-ex">✓ English is spoken in many countries.</span></p>
+<p><span class="correct-ex">✓ The results will be announced tomorrow.</span></p>
+</div>
+</div>
+`,
+exercises:[
+{q:"The new school ___ last year.",opts:["built","was built","has built","is built"],correct:1},
+{q:"English ___ in many countries around the world.",opts:["speaks","spoke","is spoken","has spoken"],correct:2},
+{q:"The homework must ___ by tomorrow.",opts:["finish","finished","be finished","be finishing"],correct:2},
+{q:"A new hospital ___ in our city right now.",opts:["is building","is being built","has built","was building"],correct:1},
+{q:"The thief ___ by the police yesterday.",opts:["caught","was caught","is caught","has caught"],correct:1},
+{q:"This song ___ by millions of people every day.",opts:["listens","listened","is listened to","was listened"],correct:2},
+{q:"The project ___ already ___ completed.",opts:["was / been","has / been","had / being","is / been"],correct:1},
+{q:"The students ___ not allowed to use phones during the exam.",opts:["are","is","was","have"],correct:0},
+{q:"By 2030, many jobs ___ by robots.",opts:["will replace","will be replaced","are replaced","were replaced"],correct:1},
+{q:"The cake ___ by my grandmother. It's delicious!",opts:["makes","made","was made","is making"],correct:2}
+]},
+{id:"conditionals",title:"Conditionals (תנאי)",desc:"Zero, First, Second, Third Conditional",color:"var(--orange)",
+lesson:`
+<div class="lesson-section">
+<h3>📘 מה זה Conditionals?</h3>
+<p>משפטי תנאי מורכבים מ-<strong>if clause</strong> (פסוקית תנאי) ו-<strong>main clause</strong> (פסוקית תוצאה). יש 4 סוגים:</p>
+</div>
+
+<div class="lesson-section">
+<h3>0️⃣ Zero Conditional — אמת כללית</h3>
+<table class="grammar-table">
+<tr><th>מבנה</th><th>דוגמה</th></tr>
+<tr><td>If + Present Simple, Present Simple</td><td class="example-cell">If you <strong>heat</strong> water to 100°C, it <strong>boils</strong>.</td></tr>
+</table>
+<p>משמש לעובדות מדעיות, חוקי טבע, דברים שתמיד נכונים.</p>
+</div>
+
+<div class="lesson-section">
+<h3>1️⃣ First Conditional — תנאי אמיתי (עתיד)</h3>
+<table class="grammar-table">
+<tr><th>מבנה</th><th>דוגמה</th></tr>
+<tr><td>If + Present Simple, <strong>will</strong> + V1</td><td class="example-cell">If it <strong>rains</strong> tomorrow, we <strong>will stay</strong> at home.</td></tr>
+</table>
+<p>מדבר על מצב אמיתי/סביר שיכול לקרות בעתיד.</p>
+<div class="tip-box"><strong>💡 שגיאה נפוצה!</strong><p>אחרי <strong>if</strong> לא שמים <strong>will</strong>!<br><span style="color:var(--red)">✗ If it will rain...</span> → <span style="color:var(--green)">✓ If it rains...</span></p></div>
+</div>
+
+<div class="lesson-section">
+<h3>2️⃣ Second Conditional — תנאי לא אמיתי (הווה דמיוני)</h3>
+<table class="grammar-table">
+<tr><th>מבנה</th><th>דוגמה</th></tr>
+<tr><td>If + Past Simple, <strong>would</strong> + V1</td><td class="example-cell">If I <strong>were</strong> rich, I <strong>would travel</strong> the world.</td></tr>
+</table>
+<p>מדבר על מצב דמיוני, לא אמיתי בהווה. "מה היה קורה אם..."</p>
+<div class="tip-box"><strong>💡 were לכולם!</strong><p>ב-Second Conditional משתמשים ב-<strong>were</strong> לכל הגופים (גם I were, he were).</p></div>
+</div>
+
+<div class="lesson-section">
+<h3>3️⃣ Third Conditional — תנאי לא אמיתי (עבר)</h3>
+<table class="grammar-table">
+<tr><th>מבנה</th><th>דוגמה</th></tr>
+<tr><td>If + Past Perfect, <strong>would have</strong> + V3</td><td class="example-cell">If I <strong>had studied</strong> harder, I <strong>would have passed</strong>.</td></tr>
+</table>
+<p>מדבר על מצב דמיוני <strong>בעבר</strong>. חרטה, "אילו הייתי..."</p>
+<div class="example-box">
+<p><span class="correct-ex">✓ If she had left earlier, she would have caught the bus.</span></p>
+<p><span class="wrong-ex">✗ If she would have left earlier...</span> (שגוי!)</p>
+</div>
+</div>
+
+<div class="lesson-section">
+<h3>📊 טבלת סיכום</h3>
+<table class="grammar-table">
+<tr><th>סוג</th><th>If clause</th><th>Main clause</th><th>שימוש</th></tr>
+<tr><td>Zero</td><td>Present Simple</td><td>Present Simple</td><td>עובדה</td></tr>
+<tr><td>First</td><td>Present Simple</td><td>will + V1</td><td>עתיד אמיתי</td></tr>
+<tr><td>Second</td><td>Past Simple</td><td>would + V1</td><td>הווה דמיוני</td></tr>
+<tr><td>Third</td><td>Past Perfect</td><td>would have + V3</td><td>עבר דמיוני</td></tr>
+</table>
+</div>
+`,
+exercises:[
+{q:"If it rains tomorrow, we ___ at home.",opts:["stay","stayed","will stay","would stay"],correct:2},
+{q:"If I ___ you, I would apologize.",opts:["am","was","were","be"],correct:2},
+{q:"If she had left earlier, she ___ the bus.",opts:["catches","caught","would catch","would have caught"],correct:3},
+{q:"If you heat water to 100°C, it ___.",opts:["boils","will boil","would boil","boiled"],correct:0},
+{q:"I ___ travel the world if I won the lottery.",opts:["will","would","had","can"],correct:1},
+{q:"If he ___ the truth, she wouldn't have been angry.",opts:["tells","told","had told","would tell"],correct:2},
+{q:"We'll miss the flight if we ___ leave now.",opts:["don't","didn't","won't","hadn't"],correct:0},
+{q:"If I ___ rich, I would donate to charity.",opts:["am","were","had been","will be"],correct:1},
+{q:"She would have helped you if you ___ asked.",opts:["have","has","had","would have"],correct:2},
+{q:"If you mix red and blue, you ___ purple.",opts:["get","will get","would get","got"],correct:0}
+]},
+{id:"connectors",title:"Connectors (מילות קישור)",desc:"However, Moreover, Therefore, Although, Despite...",color:"var(--pink)",
+lesson:`
+<div class="lesson-section">
+<h3>📘 למה מילות קישור חשובות?</h3>
+<p>מילות קישור (Connectors / Linking Words) הן <strong>הדבק</strong> שמחבר בין משפטים ורעיונות. בבגרות הן מופיעות בכל חלק — הבנת הנקרא, דקדוק, וכתיבה. חייבים לדעת אותן!</p>
+</div>
+
+<div class="lesson-section">
+<h3>🔴 ניגוד (Contrast)</h3>
+<table class="grammar-table">
+<tr><th>מילה</th><th>מבנה</th><th>דוגמה</th></tr>
+<tr><td><strong>Although / Even though</strong></td><td>+ משפט שלם</td><td class="example-cell"><strong>Although</strong> it was raining, they went outside.</td></tr>
+<tr><td><strong>Despite / In spite of</strong></td><td>+ שם עצם / V-ing</td><td class="example-cell"><strong>Despite</strong> the rain, they went outside.</td></tr>
+<tr><td><strong>However / Nevertheless</strong></td><td>מתחיל משפט חדש</td><td class="example-cell">It was cold. <strong>However</strong>, they went out.</td></tr>
+</table>
+<div class="tip-box"><strong>💡 ההבדל החשוב!</strong>
+<p><strong>Although</strong> + משפט שלם (נושא + פועל)<br>
+<strong>Despite</strong> + שם עצם או V-ing (בלי נושא + פועל)</p>
+<p><span style="color:var(--green)">✓ Although it rained... / Despite the rain...</span><br>
+<span style="color:var(--red)">✗ Despite it rained... / Although the rain...</span></p>
+</div>
+</div>
+
+<div class="lesson-section">
+<h3>🟢 תוספת (Addition)</h3>
+<table class="grammar-table">
+<tr><th>מילה</th><th>דוגמה</th></tr>
+<tr><td><strong>Moreover / Furthermore / In addition</strong></td><td class="example-cell">He is smart. <strong>Moreover</strong>, he is very hardworking.</td></tr>
+<tr><td><strong>Also / As well / Too</strong></td><td class="example-cell">She speaks English and French <strong>as well</strong>.</td></tr>
+</table>
+</div>
+
+<div class="lesson-section">
+<h3>🔵 סיבה ותוצאה (Cause & Result)</h3>
+<table class="grammar-table">
+<tr><th>מילה</th><th>סוג</th><th>דוגמה</th></tr>
+<tr><td><strong>Therefore / Consequently / As a result</strong></td><td>תוצאה</td><td class="example-cell">He studied hard. <strong>Therefore</strong>, he passed.</td></tr>
+<tr><td><strong>Because / Since / As</strong></td><td>סיבה</td><td class="example-cell"><strong>Because</strong> he studied hard, he passed.</td></tr>
+<tr><td><strong>Due to / Because of</strong></td><td>סיבה + שם עצם</td><td class="example-cell"><strong>Due to</strong> the storm, school was cancelled.</td></tr>
+</table>
+</div>
+`,
+exercises:[
+{q:"___ the bad weather, the event was a success.",opts:["Although","Despite","However","Because"],correct:1},
+{q:"She studied hard; ___, she passed the exam easily.",opts:["however","although","therefore","despite"],correct:2},
+{q:"___ he was tired, he kept working until midnight.",opts:["Despite","Although","Therefore","Moreover"],correct:1},
+{q:"The project was expensive. ___, the results were worth it.",opts:["Moreover","However","Although","Despite"],correct:1},
+{q:"She is an excellent student. ___, she volunteers at the hospital.",opts:["However","Therefore","Moreover","Despite"],correct:2},
+{q:"He failed the test ___ studying all night.",opts:["although","despite","however","because"],correct:1},
+{q:"___ to the heavy traffic, we arrived late.",opts:["Despite","Although","Due","However"],correct:2},
+{q:"The food was delicious; ___, the service was terrible.",opts:["therefore","moreover","however","despite"],correct:2},
+{q:"He wants to be a doctor. ___, he studies biology.",opts:["However","Therefore","Although","Despite"],correct:1},
+{q:"Many students failed. ___, the teacher gave a retest.",opts:["Moreover","Despite","As a result","Although"],correct:2}
+]},
+{id:"reported",title:"Reported Speech (דיבור עקיף)",desc:"שינויי זמן, כינויים ומילות זמן",color:"var(--blue)",
+lesson:`
+<div class="lesson-section">
+<h3>📘 מה זה Reported Speech?</h3>
+<p>כשמדווחים מה מישהו אמר, עוברים מדיבור <strong>ישיר</strong> (Direct) לדיבור <strong>עקיף</strong> (Reported/Indirect).</p>
+<div class="example-box">
+<p><strong>Direct:</strong> He said: "I <strong>am</strong> happy."</p>
+<p><strong>Reported:</strong> He said that he <strong>was</strong> happy.</p>
+</div>
+</div>
+
+<div class="lesson-section">
+<h3>🔧 כללי ההסטה (Backshift)</h3>
+<p>כשמעבירים לדיבור עקיף, מסיטים את הזמן <strong>אחורה</strong>:</p>
+<table class="grammar-table">
+<tr><th>Direct Speech</th><th>→</th><th>Reported Speech</th></tr>
+<tr><td>Present Simple (am/is/work)</td><td>→</td><td class="example-cell">Past Simple (was/were/worked)</td></tr>
+<tr><td>Present Continuous (am working)</td><td>→</td><td class="example-cell">Past Continuous (was working)</td></tr>
+<tr><td>Past Simple (worked)</td><td>→</td><td class="example-cell">Past Perfect (had worked)</td></tr>
+<tr><td>Present Perfect (have worked)</td><td>→</td><td class="example-cell">Past Perfect (had worked)</td></tr>
+<tr><td>will</td><td>→</td><td class="example-cell">would</td></tr>
+<tr><td>can</td><td>→</td><td class="example-cell">could</td></tr>
+</table>
+</div>
+
+<div class="lesson-section">
+<h3>📅 שינויי זמן ומקום</h3>
+<table class="grammar-table">
+<tr><th>Direct</th><th>→</th><th>Reported</th></tr>
+<tr><td>today</td><td>→</td><td class="example-cell">that day</td></tr>
+<tr><td>tomorrow</td><td>→</td><td class="example-cell">the next day / the following day</td></tr>
+<tr><td>yesterday</td><td>→</td><td class="example-cell">the day before / the previous day</td></tr>
+<tr><td>here</td><td>→</td><td class="example-cell">there</td></tr>
+<tr><td>this</td><td>→</td><td class="example-cell">that</td></tr>
+</table>
+</div>
+
+<div class="lesson-section">
+<h3>❓ שאלות ב-Reported Speech</h3>
+<p>שאלות Yes/No → משתמשים ב-<strong>if / whether</strong></p>
+<p>שאלות עם מילות שאלה (Wh-) → משתמשים באותה מילה</p>
+<div class="example-box">
+<p>"<strong>Do</strong> you like pizza?" → He asked me <strong>if</strong> I liked pizza.</p>
+<p>"<strong>Where</strong> do you live?" → She asked me <strong>where</strong> I lived.</p>
+</div>
+<div class="tip-box"><strong>💡 שים לב!</strong><p>ב-Reported Questions אין סימן שאלה ואין היפוך (inversion)!<br>
+<span style="color:var(--red)">✗ She asked where did I live?</span><br>
+<span style="color:var(--green)">✓ She asked where I lived.</span></p></div>
+</div>
+`,
+exercises:[
+{q:'She said: "I am tired." → She said that she ___ tired.',opts:["is","was","has been","will be"],correct:1},
+{q:'He told me: "I will call you." → He told me he ___ call me.',opts:["will","would","can","shall"],correct:1},
+{q:'They said: "We have finished." → They said they ___ finished.',opts:["have","has","had","were"],correct:2},
+{q:'She asked: "Where do you live?" → She asked me where I ___.',opts:["live","lived","had lived","was living"],correct:1},
+{q:'He said: "I can\'t come today." → He said he ___ come that day.',opts:["can't","couldn't","won't","didn't"],correct:1},
+{q:'The teacher said: "The exam is tomorrow." → The teacher said the exam was ___.',opts:["tomorrow","today","the next day","yesterday"],correct:2},
+{q:'She said: "I saw him yesterday." → She said she ___ him the day before.',opts:["saw","had seen","has seen","sees"],correct:1},
+{q:'He asked: "Did you enjoy the movie?" → He asked me ___ I had enjoyed the movie.',opts:["did","if","that","what"],correct:1}
+]},
+{id:"relative",title:"Relative Clauses (פסוקיות זיקה)",desc:"Who, which, that, whose, where, when",color:"var(--red)",
+lesson:`
+<div class="lesson-section">
+<h3>📘 מה זה Relative Clause?</h3>
+<p>Relative Clause היא פסוקית שמוסיפה מידע על שם עצם. היא מתחילה ב-<strong>relative pronoun</strong> (כינוי זיקה).</p>
+<div class="example-box">
+<p>The boy <strong>who lives next door</strong> is my friend.<br>
+<em>"who lives next door"</em> = Relative Clause שמספרת על "the boy"</p>
+</div>
+</div>
+
+<div class="lesson-section">
+<h3>🔧 כינויי הזיקה</h3>
+<table class="grammar-table">
+<tr><th>כינוי</th><th>מתייחס ל</th><th>דוגמה</th></tr>
+<tr><td><strong>who / that</strong></td><td>אנשים</td><td class="example-cell">The woman <strong>who</strong> called is my aunt.</td></tr>
+<tr><td><strong>which / that</strong></td><td>דברים / בעלי חיים</td><td class="example-cell">The book <strong>which</strong> I read was great.</td></tr>
+<tr><td><strong>whose</strong></td><td>שייכות (של מי)</td><td class="example-cell">The girl <strong>whose</strong> father is a pilot...</td></tr>
+<tr><td><strong>where</strong></td><td>מקום</td><td class="example-cell">The city <strong>where</strong> I was born...</td></tr>
+<tr><td><strong>when</strong></td><td>זמן</td><td class="example-cell">The year <strong>when</strong> we met...</td></tr>
+</table>
+</div>
+
+<div class="lesson-section">
+<h3>📌 Defining vs. Non-Defining</h3>
+<table class="grammar-table">
+<tr><th></th><th>Defining (מגדירה)</th><th>Non-Defining (לא מגדירה)</th></tr>
+<tr><td>תפקיד</td><td>מידע הכרחי</td><td class="example-cell">מידע נוסף (לא הכרחי)</td></tr>
+<tr><td>פסיקים</td><td>בלי פסיקים</td><td class="example-cell">עם פסיקים</td></tr>
+<tr><td>that</td><td>אפשר להשתמש</td><td class="example-cell">אי אפשר להשתמש!</td></tr>
+</table>
+<div class="example-box">
+<p><strong>Defining:</strong> The student <strong>who scored 100</strong> got a prize. (איזה תלמיד? — הכרחי!)</p>
+<p><strong>Non-Defining:</strong> My brother<strong>, who lives in London,</strong> is visiting us. (יש לי רק אח אחד — מידע נוסף)</p>
+</div>
+<div class="tip-box"><strong>💡 לבגרות:</strong><p>אם יש <strong>פסיקים</strong> סביב הפסוקית — זה Non-Defining, ואז <strong>אסור</strong> להשתמש ב-<strong>that</strong>!</p></div>
+</div>
+`,
+exercises:[
+{q:"The boy ___ won the competition is my cousin.",opts:["which","who","whose","where"],correct:1},
+{q:"This is the restaurant ___ we had dinner last week.",opts:["which","who","where","whose"],correct:2},
+{q:"The book ___ you lent me was fascinating.",opts:["who","whose","where","which"],correct:3},
+{q:"The girl ___ father is a pilot wants to fly too.",opts:["who","which","whose","where"],correct:2},
+{q:"2020 was the year ___ the pandemic began.",opts:["which","where","who","when"],correct:3},
+{q:"The teacher ___ taught us last year has retired.",opts:["which","who","whose","where"],correct:1},
+{q:"Is that the house ___ Shakespeare was born?",opts:["which","who","whose","where"],correct:3},
+{q:"She married a man ___ she met at university.",opts:["who","which","whose","where"],correct:0}
+]},
+{id:"modals",title:"Modals (פעלי עזר)",desc:"can, could, may, might, must, should, would",color:"var(--steel)",
+lesson:`
+<div class="lesson-section">
+<h3>📘 מה זה Modals?</h3>
+<p><strong>Modals</strong> (פעלי עזר) הם פעלים מיוחדים שבאים <strong>לפני</strong> הפועל הראשי ומשנים את המשמעות שלו. הם מביעים יכולת, אפשרות, חובה, עצה, בקשה ועוד.</p>
+<p><strong>כללים חשובים:</strong></p>
+<p>1. אחרי Modal תמיד בא <strong>פועל בצורת בסיס</strong> (infinitive בלי to).</p>
+<p>2. אין להם <strong>s</strong> בגוף שלישי: <span style="color:var(--red)">✗ He cans</span> → <span style="color:var(--green)">✓ He can</span></p>
+<p>3. שלילה: Modal + <strong>not</strong> (can't, mustn't, shouldn't...)</p>
+</div>
+
+<div class="lesson-section">
+<h3>💪 Can / Could — יכולת ובקשה</h3>
+<table class="grammar-table">
+<tr><th>Modal</th><th>שימוש</th><th>דוגמה</th><th>תרגום</th></tr>
+<tr><td><strong>can</strong></td><td>יכולת בהווה</td><td class="example-cell">She <strong>can</strong> speak three languages.</td><td>היא יכולה לדבר שלוש שפות.</td></tr>
+<tr><td><strong>can</strong></td><td>בקשה לא פורמלית</td><td class="example-cell"><strong>Can</strong> I borrow your pen?</td><td>אפשר לשאול את העט שלך?</td></tr>
+<tr><td><strong>could</strong></td><td>יכולת בעבר</td><td class="example-cell">When I was young, I <strong>could</strong> run fast.</td><td>כשהייתי צעיר, יכולתי לרוץ מהר.</td></tr>
+<tr><td><strong>could</strong></td><td>בקשה מנומסת</td><td class="example-cell"><strong>Could</strong> you help me, please?</td><td>תוכל לעזור לי, בבקשה?</td></tr>
+<tr><td><strong>could</strong></td><td>אפשרות</td><td class="example-cell">It <strong>could</strong> rain later.</td><td>יכול להיות שירד גשם מאוחר יותר.</td></tr>
+</table>
+</div>
+
+<div class="lesson-section">
+<h3>🟢 May / Might — אפשרות ורשות</h3>
+<table class="grammar-table">
+<tr><th>Modal</th><th>שימוש</th><th>דוגמה</th><th>תרגום</th></tr>
+<tr><td><strong>may</strong></td><td>אפשרות (סביר)</td><td class="example-cell">She <strong>may</strong> come to the party.</td><td>יכול להיות שהיא תבוא למסיבה.</td></tr>
+<tr><td><strong>may</strong></td><td>רשות (פורמלי)</td><td class="example-cell"><strong>May</strong> I sit here?</td><td>האם מותר לי לשבת כאן?</td></tr>
+<tr><td><strong>might</strong></td><td>אפשרות (פחות סביר)</td><td class="example-cell">It <strong>might</strong> snow tomorrow.</td><td>אולי ירד שלג מחר (פחות סביר).</td></tr>
+</table>
+<div class="tip-box"><strong>💡 ההבדל בין may ל-might:</strong>
+<p><strong>may</strong> = אפשרות סבירה יותר (50%)<br><strong>might</strong> = אפשרות פחות סבירה (30%)</p>
+</div>
+</div>
+
+<div class="lesson-section">
+<h3>🔴 Must / Have to — חובה</h3>
+<table class="grammar-table">
+<tr><th>Modal</th><th>שימוש</th><th>דוגמה</th><th>תרגום</th></tr>
+<tr><td><strong>must</strong></td><td>חובה (אישית/פנימית)</td><td class="example-cell">I <strong>must</strong> finish this project today.</td><td>אני חייב לסיים את הפרויקט היום.</td></tr>
+<tr><td><strong>must</strong></td><td>הסקה / ודאות</td><td class="example-cell">He <strong>must</strong> be tired after that long flight.</td><td>הוא בטח עייף אחרי הטיסה הארוכה.</td></tr>
+<tr><td><strong>mustn't</strong></td><td>איסור</td><td class="example-cell">You <strong>mustn't</strong> use your phone during the exam.</td><td>אסור להשתמש בטלפון במבחן.</td></tr>
+</table>
+<div class="tip-box"><strong>💡 must vs. have to:</strong>
+<p><strong>must</strong> = חובה פנימית, אישית ("אני מרגיש שחייב")<br><strong>have to</strong> = חובה חיצונית, חוק, כלל ("מחייבים אותי")</p>
+<p><strong>mustn't</strong> = אסור! ≠ <strong>don't have to</strong> = לא חייב (אבל מותר)</p>
+</div>
+</div>
+
+<div class="lesson-section">
+<h3>💡 Should / Ought to — עצה</h3>
+<table class="grammar-table">
+<tr><th>Modal</th><th>שימוש</th><th>דוגמה</th><th>תרגום</th></tr>
+<tr><td><strong>should</strong></td><td>עצה / המלצה</td><td class="example-cell">You <strong>should</strong> study for the exam.</td><td>כדאי שתלמד למבחן.</td></tr>
+<tr><td><strong>shouldn't</strong></td><td>עצה שלילית</td><td class="example-cell">You <strong>shouldn't</strong> eat so much sugar.</td><td>לא כדאי שתאכל כל כך הרבה סוכר.</td></tr>
+</table>
+</div>
+
+<div class="lesson-section">
+<h3>🟣 Would — תנאי ונימוס</h3>
+<table class="grammar-table">
+<tr><th>שימוש</th><th>דוגמה</th><th>תרגום</th></tr>
+<tr><td>Second Conditional</td><td class="example-cell">If I were rich, I <strong>would</strong> travel.</td><td>אם הייתי עשיר, הייתי מטייל.</td></tr>
+<tr><td>בקשה מנומסת</td><td class="example-cell"><strong>Would</strong> you like some coffee?</td><td>האם תרצה קפה?</td></tr>
+</table>
+</div>
+
+<div class="lesson-section">
+<h3>📊 טבלת סיכום</h3>
+<table class="grammar-table">
+<tr><th>Modal</th><th>משמעות עיקרית</th><th>דוגמה</th></tr>
+<tr><td>can</td><td>יכולת, בקשה</td><td class="example-cell">I can swim.</td></tr>
+<tr><td>could</td><td>יכולת בעבר, בקשה מנומסת, אפשרות</td><td class="example-cell">Could you wait?</td></tr>
+<tr><td>may</td><td>אפשרות, רשות</td><td class="example-cell">May I leave?</td></tr>
+<tr><td>might</td><td>אפשרות חלשה</td><td class="example-cell">It might rain.</td></tr>
+<tr><td>must</td><td>חובה, הסקה</td><td class="example-cell">You must stop.</td></tr>
+<tr><td>should</td><td>עצה</td><td class="example-cell">You should rest.</td></tr>
+<tr><td>would</td><td>תנאי, נימוס</td><td class="example-cell">Would you help?</td></tr>
+</table>
+</div>
+`,
+exercises:[
+{q:"You ___ drive without a license. It's against the law.",opts:["mustn't","don't have to","shouldn't","couldn't"],correct:0},
+{q:"She ___ speak French fluently when she lived in Paris.",opts:["can","could","may","must"],correct:1},
+{q:"It's getting cloudy. It ___ rain this afternoon.",opts:["must","should","might","would"],correct:2},
+{q:"You look exhausted. You ___ get some rest.",opts:["would","should","mustn't","could"],correct:1},
+{q:"___ I use your computer for a moment?",opts:["Would","Should","May","Must"],correct:2},
+{q:"He has been studying all day. He ___ be very tired.",opts:["can","might","must","should"],correct:2},
+{q:"You ___ pay for the tickets. They're free!",opts:["mustn't","don't have to","can't","shouldn't"],correct:1},
+{q:"When I was a child, I ___ climb trees easily.",opts:["can","may","must","could"],correct:3},
+{q:"___ you like something to drink?",opts:["Should","Would","Must","Can"],correct:1},
+{q:"Students ___ cheat on exams. It is strictly forbidden.",opts:["don't have to","shouldn't","mustn't","might not"],correct:2}
+]},
+
+{id:"phrasal",title:"Phrasal Verbs (פעלים צירופיים)",desc:"look up, give up, turn out, carry on...",color:"var(--teal)",
+lesson:`
+<div class="lesson-section">
+<h3>📘 מה זה Phrasal Verbs?</h3>
+<p><strong>Phrasal Verbs</strong> (פעלים צירופיים) הם צירוף של <strong>פועל + מילית</strong> (preposition / adverb) שיחד יוצרים משמעות חדשה, שונה מהפועל המקורי.</p>
+<div class="example-box">
+<p><strong>look</strong> = להסתכל → <strong>look up</strong> = לחפש (במילון) / להסתכל למעלה</p>
+<p><strong>give</strong> = לתת → <strong>give up</strong> = לוותר</p>
+<p><strong>turn</strong> = לפנות → <strong>turn out</strong> = להתברר</p>
+</div>
+<p>Phrasal Verbs מאוד חשובים לבגרות! הם מופיעים בהבנת הנקרא, באוצר מילים ובשאלות דקדוק.</p>
+</div>
+
+<div class="lesson-section">
+<h3>🔴 פעלים צירופיים נפוצים — קבוצה 1</h3>
+<table class="grammar-table">
+<tr><th>Phrasal Verb</th><th>משמעות</th><th>דוגמה</th></tr>
+<tr><td><strong>give up</strong></td><td>לוותר</td><td class="example-cell">Don't <strong>give up</strong> — keep trying!</td></tr>
+<tr><td><strong>look up</strong></td><td>לחפש (מידע)</td><td class="example-cell">I need to <strong>look up</strong> this word in the dictionary.</td></tr>
+<tr><td><strong>find out</strong></td><td>לגלות</td><td class="example-cell">She <strong>found out</strong> the truth about her family.</td></tr>
+<tr><td><strong>turn off / on</strong></td><td>לכבות / להדליק</td><td class="example-cell">Please <strong>turn off</strong> the lights when you leave.</td></tr>
+<tr><td><strong>carry on</strong></td><td>להמשיך</td><td class="example-cell"><strong>Carry on</strong> reading — I'll wait.</td></tr>
+<tr><td><strong>set up</strong></td><td>להקים</td><td class="example-cell">They <strong>set up</strong> a new charity organization.</td></tr>
+<tr><td><strong>break down</strong></td><td>להתקלקל / להתמוטט</td><td class="example-cell">The car <strong>broke down</strong> on the highway.</td></tr>
+</table>
+</div>
+
+<div class="lesson-section">
+<h3>🔵 פעלים צירופיים נפוצים — קבוצה 2</h3>
+<table class="grammar-table">
+<tr><th>Phrasal Verb</th><th>משמעות</th><th>דוגמה</th></tr>
+<tr><td><strong>turn out</strong></td><td>להתברר</td><td class="example-cell">It <strong>turned out</strong> that he was lying.</td></tr>
+<tr><td><strong>come up with</strong></td><td>להעלות רעיון</td><td class="example-cell">She <strong>came up with</strong> a brilliant idea.</td></tr>
+<tr><td><strong>take part in</strong></td><td>להשתתף ב-</td><td class="example-cell">All students must <strong>take part in</strong> the project.</td></tr>
+<tr><td><strong>deal with</strong></td><td>להתמודד עם</td><td class="example-cell">How do you <strong>deal with</strong> stress?</td></tr>
+<tr><td><strong>bring up</strong></td><td>לגדל (ילדים) / להעלות נושא</td><td class="example-cell">She was <strong>brought up</strong> by her grandparents.</td></tr>
+<tr><td><strong>put off</strong></td><td>לדחות</td><td class="example-cell">Stop <strong>putting off</strong> your homework!</td></tr>
+<tr><td><strong>run out of</strong></td><td>להיגמר</td><td class="example-cell">We <strong>ran out of</strong> milk — can you buy some?</td></tr>
+</table>
+</div>
+
+<div class="lesson-section">
+<h3>🟢 פעלים צירופיים נפוצים — קבוצה 3</h3>
+<table class="grammar-table">
+<tr><th>Phrasal Verb</th><th>משמעות</th><th>דוגמה</th></tr>
+<tr><td><strong>point out</strong></td><td>להצביע על / לציין</td><td class="example-cell">The teacher <strong>pointed out</strong> several mistakes.</td></tr>
+<tr><td><strong>grow up</strong></td><td>לגדול</td><td class="example-cell">I <strong>grew up</strong> in a small town.</td></tr>
+<tr><td><strong>look forward to</strong></td><td>לצפות ל- בהתרגשות</td><td class="example-cell">I'm <strong>looking forward to</strong> the summer vacation.</td></tr>
+<tr><td><strong>take off</strong></td><td>להמריא / להוריד (בגד)</td><td class="example-cell">The plane <strong>took off</strong> at 8 a.m.</td></tr>
+<tr><td><strong>make up</strong></td><td>להמציא / להשלים</td><td class="example-cell">He <strong>made up</strong> an excuse for being late.</td></tr>
+<tr><td><strong>get along with</strong></td><td>להסתדר עם</td><td class="example-cell">She <strong>gets along with</strong> all her classmates.</td></tr>
+</table>
+</div>
+
+<div class="lesson-section">
+<div class="tip-box"><strong>💡 טיפ לבגרות:</strong>
+<p>בבגרות, Phrasal Verbs מופיעים בעיקר בשאלות <strong>אוצר מילים</strong> ובשאלות <strong>"vocabulary in context"</strong> בהבנת הנקרא. כדאי ללמוד אותם עם דוגמאות ולא רק תרגום!</p>
+<p><strong>שים לב:</strong> אחרי <strong>look forward to</strong> בא <strong>V-ing</strong> (ולא infinitive):<br>
+<span style="color:var(--green)">✓ I look forward to <strong>meeting</strong> you.</span><br>
+<span style="color:var(--red)">✗ I look forward to meet you.</span></p>
+</div>
+</div>
+`,
+exercises:[
+{q:"Don't ___ — you can do it if you keep trying!",opts:["give up","give in","give out","give off"],correct:0},
+{q:"Can you ___ the meaning of this word in the dictionary?",opts:["look out","look for","look up","look after"],correct:2},
+{q:"The meeting was ___ until next week because the manager was sick.",opts:["put on","put off","put up","put out"],correct:1},
+{q:"It ___ that the information we received was incorrect.",opts:["turned off","turned up","turned out","turned over"],correct:2},
+{q:"We have ___ sugar. Can you buy some at the store?",opts:["run out of","run into","run over","run away from"],correct:0},
+{q:"She ___ in a small village in the north of the country.",opts:["brought up","grew up","set up","came up"],correct:1},
+{q:"The scientist ___ a new theory to explain the phenomenon.",opts:["came up with","came across","came out","came over"],correct:0},
+{q:"I'm really ___ seeing you at the party next weekend!",opts:["looking up to","looking after","looking forward to","looking into"],correct:2},
+{q:"Please ___ your shoes before entering the house.",opts:["take off","take on","take up","take over"],correct:0},
+{q:"She was ___ by her aunt after her parents passed away.",opts:["grown up","set up","brought up","made up"],correct:2}
+]}
+];
+
+// ===== WRITING PROMPTS =====
+const writingPrompts = [
+{id:1,title:"Should Schools Ban Mobile Phones?",type:"Argumentative Essay",prompt:"Some people believe that mobile phones should be completely banned in schools, while others think students should be allowed to use them. Write an essay expressing your opinion.",wordCount:"120-150",
+tips:["Start with a clear introduction stating your opinion","Give 2-3 arguments with supporting examples","Consider the opposing view","End with a strong conclusion","Use connectors: Moreover, However, In addition"],
+structure:"Introduction → Argument 1 + Example → Argument 2 + Example → Counter-argument → Conclusion"},
+{id:2,title:"The Advantages and Disadvantages of Online Learning",type:"Discursive Essay",prompt:"Online learning has become increasingly popular. Write an essay discussing the advantages and disadvantages of studying online compared to traditional classroom learning.",wordCount:"120-150",
+tips:["Present both sides fairly","Give specific examples","Use comparing language: while, whereas, on the other hand","End by stating which you think is better and why"],
+structure:"Introduction → Advantages (2-3) → Disadvantages (2-3) → Your opinion → Conclusion"},
+{id:3,title:"A Letter to the Mayor",type:"Formal Letter",prompt:"Write a letter to the mayor of your city suggesting ways to make the city more environmentally friendly. Include at least three suggestions.",wordCount:"120-150",
+tips:["Use formal language (Dear Mr./Ms. Mayor)","State your purpose in the first paragraph","Present each suggestion with reasoning","Use polite language","End formally (Yours sincerely)"],
+structure:"Greeting → Purpose → Suggestion 1 → Suggestion 2 → Suggestion 3 → Closing"},
+{id:4,title:"Does Technology Make People Lazier?",type:"Argumentative Essay",prompt:"Some argue that modern technology makes people lazy, while others believe it helps people be more productive. Write an essay expressing your opinion.",wordCount:"120-150",
+tips:["Define what you mean by 'lazy'","Give concrete examples","Consider both physical and mental effects","Use cause-and-effect language"],
+structure:"Introduction → Your position → Supporting arguments → Counter-argument → Conclusion"},
+{id:5,title:"The Importance of Volunteering",type:"Argumentative Essay",prompt:"Should high school students be required to do community service to graduate? Write an essay expressing your opinion on mandatory volunteering.",wordCount:"120-150",
+tips:["Clearly state your position","Consider benefits: skills, community, personal growth","Consider drawbacks: forced volunteering, time pressure","Provide a personal example if possible"],
+structure:"Introduction → Arguments for → Arguments against → Your opinion → Conclusion"}
+];
+
+// ===== EXAM SIMULATIONS =====
+const examSimulations = [
+{id:1,module:"Module E",title:"סימולציה 1 — שאלון E",desc:"הבנת הנקרא + אוצר מילים",duration:75,
+sections:[{type:"reading",title:"Reading Comprehension",points:70,
+passage:`<p>Urban farming — growing food in cities — is gaining popularity. In densely populated areas where access to fresh produce is limited, rooftop gardens, vertical farms, and community plots are providing residents with nutritious food while offering environmental benefits.</p>
+<p>One pioneer is Will Allen, a former basketball player who founded Growing Power in Milwaukee. What began as a small project on a two-acre plot has inspired thousands of urban farmers worldwide. Allen demonstrated that even in concrete-covered neighborhoods, it is possible to grow vegetables, raise fish, and keep chickens.</p>
+<p>The benefits extend beyond food production. Studies show community gardens reduce crime rates, improve mental health, and strengthen social bonds. Children who participate in gardening are more likely to develop healthy eating habits.</p>
+<p>However, urban farming faces challenges. Land is expensive, zoning laws restrict agricultural activities, and urban soil may be contaminated. Advocates argue that hydroponics — growing plants without soil using nutrient-rich water — can overcome many limitations.</p>
+<p>Singapore aims to produce 30% of its nutritional needs locally by 2030 through vertical farming. Paris has opened the world's largest rooftop farm. As cities grow and climate change threatens traditional farming, urban agriculture may become a necessity.</p>`,
+questions:[
+{type:"multiple",text:"Will Allen was originally a:",options:["a) Chef","b) Basketball player","c) Scientist","d) Politician"],correct:1},
+{type:"multiple",text:"Community gardens help by:",options:["a) Increasing crime rates","b) Being only for vegetables","c) Reducing crime and improving mental health","d) Being too expensive"],correct:2},
+{type:"multiple",text:"What is hydroponics?",options:["a) Growing in contaminated soil","b) A rooftop garden","c) Growing plants without soil using nutrient-rich water","d) Raising fish"],correct:2},
+{type:"multiple",text:"Singapore aims to produce locally ___ of its food by 2030.",options:["a) 10%","b) 20%","c) 30%","d) 50%"],correct:2},
+{type:"multiple",text:"The word 'obstacles' in context means:",options:["a) Advantages","b) Challenges","c) Solutions","d) Questions"],correct:1}
+]},
+{type:"vocabulary",title:"Vocabulary",points:30,
+questions:[
+{q:"The government plans to ___ new regulations.",opts:["implement","impress","import","improve"],correct:0},
+{q:"The ___ of the study showed exercise improves memory.",opts:["figures","findings","features","factors"],correct:1},
+{q:"We need a ___ solution to the traffic problem.",opts:["considerable","sustainable","financial","peculiar"],correct:1},
+{q:"The company decided to ___ its operations abroad.",opts:["extend","expose","explore","exchange"],correct:0},
+{q:"Many species risk becoming ___ due to climate change.",opts:["isolated","extinct","extreme","essential"],correct:1},
+{q:"She made a ___ effort to finish on time.",opts:["slight","considerable","remote","domestic"],correct:1}
+]}
+]},
+{id:2,module:"Module G",title:"סימולציה 2 — שאלון G",desc:"הבנת הנקרא + כתיבת חיבור",duration:105,
+sections:[{type:"reading",title:"Reading Comprehension",points:60,
+passage:`<p>The "gap year" — time off between high school and university — was once associated only with wealthy European students. Today, it has become mainstream, with students from all backgrounds choosing to delay university for real-world experience.</p>
+<p>Supporters argue gap years offer personal growth. Working abroad or volunteering helps students develop independence and clearer goals. Harvard research suggests gap year students perform better academically, arriving with greater maturity and motivation.</p>
+<p>Critics point to drawbacks. Students may lose academic momentum and find it hard to return to studying. Financial concerns are significant — a year of travel can be costly. In competitive job markets, delaying graduation could put students at a disadvantage.</p>
+<p>Despite debate, gap years grow in popularity. In the UK, approximately 230,000 students take one annually. Many universities now encourage students to defer enrollment, and some offer structured gap year programs combining travel, service, and coursework.</p>
+<p>Whether a gap year is beneficial depends on how the time is spent. A well-planned year with clear goals can be transformative, while an unplanned year of idleness may do more harm than good.</p>`,
+questions:[
+{type:"multiple",text:"Gap years were originally associated with:",options:["a) American students","b) Wealthy European students","c) University professors","d) Working-class families"],correct:1},
+{type:"multiple",text:"Harvard research suggests gap year students:",options:["a) Drop out more often","b) Perform worse","c) Perform better academically","d) Choose different majors"],correct:2},
+{type:"multiple",text:"Which drawback is mentioned?",options:["a) Learning too many languages","b) Becoming too independent","c) Losing academic momentum","d) Universities refusing them"],correct:2},
+{type:"multiple",text:"How many UK students take a gap year annually?",options:["a) 130,000","b) 200,000","c) 230,000","d) 300,000"],correct:2},
+{type:"multiple",text:"The word 'defer' most likely means:",options:["a) Cancel","b) Postpone","c) Complete","d) Apply for"],correct:1},
+{type:"multiple",text:"A successful gap year requires:",options:["a) A lot of money","b) Travel to 3+ countries","c) Clear goals and structured activities","d) University approval"],correct:2}
+]},
+{type:"writing",title:"Writing Task",points:40,
+prompt:"Some people believe all high school students should take a gap year before university. Others think students should go directly. Write an essay expressing your opinion.",wordCount:"120-150"}
+]},
+{id:3,module:"Module E",title:"סימולציה 3 — שאלון E",desc:"הבנת הנקרא + אוצר מילים",duration:75,
+sections:[{type:"reading",title:"Reading Comprehension",points:70,
+passage:`<p>Every year, thousands of animal and plant species disappear from the Earth forever. Scientists estimate that the current rate of extinction is between 100 and 1,000 times higher than the natural background rate. This alarming trend has led many researchers to declare that we are experiencing the sixth mass extinction in Earth's history — but unlike previous extinction events caused by natural disasters, this one is driven almost entirely by human activity.</p>
+<p>The primary cause of species loss is habitat destruction. As human populations grow, forests are cleared for agriculture, wetlands are drained for construction, and oceans are polluted by industrial waste. The World Wildlife Fund reports that wildlife populations have declined by an average of 69% since 1970. Tropical rainforests, which contain more than half of all known species, are being destroyed at a rate of approximately 10 million hectares per year — an area roughly the size of South Korea.</p>
+<p>Climate change is accelerating the crisis. Rising temperatures force species to migrate to cooler areas, but many cannot move fast enough or have nowhere to go. Coral reefs, which support about 25% of all marine species, are particularly vulnerable. Scientists predict that if global temperatures rise by more than 1.5°C above pre-industrial levels, up to 90% of coral reefs could be lost.</p>
+<p>The consequences of biodiversity loss extend far beyond the natural world. Healthy ecosystems provide services that humans depend on, including clean air, fresh water, pollination of crops, and natural flood protection. The economic value of these ecosystem services has been estimated at $125 trillion per year — nearly twice the global GDP.</p>
+<p>Conservation efforts offer some hope. Protected areas now cover about 17% of the world's land surface. Breeding programs have saved species like the California condor and the Arabian oryx from extinction. However, experts stress that much more needs to be done, including reducing consumption, fighting climate change, and restoring damaged ecosystems. The choices we make in the next decade will determine the future of life on Earth.</p>`,
+questions:[
+{type:"multiple",text:"According to the passage, the current extinction rate is:",options:["a) Equal to the natural background rate","b) Slightly higher than normal","c) 100 to 1,000 times higher than the natural rate","d) Impossible to measure"],correct:2},
+{type:"multiple",text:"The word 'vulnerable' (paragraph 3) most likely means:",options:["a) Strong and resistant","b) Easily harmed or damaged","c) Very common","d) Rapidly growing"],correct:1},
+{type:"multiple",text:"What is the main cause of species loss according to the passage?",options:["a) Natural disasters","b) Climate change alone","c) Habitat destruction due to human activity","d) Pollution of rivers"],correct:2},
+{type:"multiple",text:"The passage states that ecosystem services are worth approximately:",options:["a) $69 trillion per year","b) $90 trillion per year","c) $125 trillion per year","d) $17 trillion per year"],correct:2},
+{type:"multiple",text:"Which of the following is mentioned as a successful conservation effort?",options:["a) Stopping all agriculture in tropical areas","b) Breeding programs that saved the California condor","c) Banning fishing worldwide","d) Moving all endangered species to zoos"],correct:1}
+]},
+{type:"vocabulary",title:"Vocabulary",points:30,
+questions:[
+{q:"The government announced new ___ to protect endangered species.",opts:["measures","treasures","features","figures"],correct:0},
+{q:"Scientists ___ that the problem will get worse without action.",opts:["prevent","predict","produce","perform"],correct:1},
+{q:"Pollution has had a ___ impact on marine ecosystems.",opts:["slight","reliable","significant","flexible"],correct:2},
+{q:"Many animals struggle to ___ in rapidly changing environments.",opts:["survive","support","supply","suggest"],correct:0},
+{q:"The organization works to raise ___ about environmental issues.",opts:["ambition","awareness","appearance","attraction"],correct:1},
+{q:"Deforestation has ___ dramatically in recent decades.",opts:["decreased","increased","invested","insisted"],correct:1}
+]}
+]}
+];
+
+// =====================================================================
+// APP LOGIC
+// =====================================================================
+let currentMode='en-to-he', currentList='all', currentSection='dashboard';
+let quizWords=[],quizIndex=0,quizScore=0,quizTotal=0,quizFirstAttempts={};
+let quizBlacklistOnly=false, currentQuizWord=null, examTimer=null;
+
+// Auto-login silently
+const defaultUser = 'student';
+let currentUser;
+function initUser() {
+    const saved = localStorage.getItem(`hafif_eng_${defaultUser}`);
+    currentUser = saved ? JSON.parse(saved) : {
+        username: defaultUser, history: [],
+        modes: {
+            'en-to-he':{blacklist:[],stats:{totalQuizzes:0,correctAnswers:0,totalAnswers:0},masteredWords:[]},
+            'he-to-en':{blacklist:[],stats:{totalQuizzes:0,correctAnswers:0,totalAnswers:0},masteredWords:[]}
+        }
+    };
+}
+function getModeData(){return currentUser.modes[currentMode];}
+function saveUser(){localStorage.setItem(`hafif_eng_${defaultUser}`,JSON.stringify(currentUser));}
+initUser();
+setTimeout(updateProgress, 100);
+
+// ===== PROGRESS BAR =====
+function updateProgress(){
+    const m=getModeData();
+    const total=getAllWords().length;
+    const mastered=getMasteredWords().length;
+    const blacklist=m.blacklist.length;
+    const pct=total>0?Math.round((mastered/total)*100):0;
+    document.getElementById('progressPct').textContent=pct+'%';
+    document.getElementById('progressFill').style.width=pct+'%';
+    document.getElementById('progressDetail').innerHTML=
+        `<span>שולט ב-${mastered} מתוך ${total} מילים</span><span>רשימה שחורה: ${blacklist}</span>`;
+}
+
+// ===== CONFETTI =====
+function showConfetti(){
+    const container=document.createElement('div');
+    container.className='confetti-container';
+    document.body.appendChild(container);
+    const colors=['#27ae60','#2ecc71','#d4952b','#e8ac42','#5c6bc0','#4a3f8a','#0097a7','#ff6b6b'];
+    for(let i=0;i<30;i++){
+        const piece=document.createElement('div');
+        piece.className='confetti-piece';
+        piece.style.left=Math.random()*100+'%';
+        piece.style.top=Math.random()*40+'%';
+        piece.style.background=colors[Math.floor(Math.random()*colors.length)];
+        piece.style.width=(6+Math.random()*8)+'px';
+        piece.style.height=(6+Math.random()*8)+'px';
+        piece.style.animationDelay=(Math.random()*0.5)+'s';
+        piece.style.animationDuration=(0.8+Math.random()*0.8)+'s';
+        if(Math.random()>0.5) piece.style.borderRadius='50%';
+        container.appendChild(piece);
+    }
+    setTimeout(()=>container.remove(),2000);
+}
+
+// ===== NAVIGATION =====
+function navigateTo(sec) {
+    currentSection = sec;
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById('sec-'+sec).classList.add('active');
+    document.querySelectorAll('.nav-link').forEach(l=>l.classList.toggle('active',l.dataset.section===sec));
+    if(sec==='dashboard') updateProgress();
+    if(sec==='reading') renderReadingList();
+    if(sec==='grammar') renderGrammarList();
+    if(sec==='writing') renderWritingList();
+    if(sec==='exams') renderExamList();
+    if(sec==='vocabulary'){renderWords(filterWords());updateUserStatsMini();}
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.nav-link').forEach(l=>l.addEventListener('click',()=>navigateTo(l.dataset.section)));
+
+// ===== VOCABULARY =====
+function getAllWords(){let w=[];for(let l in vocabulary) vocabulary[l].forEach(v=>w.push({...v,list:l}));return w;}
+let isMuted = false;
+function speak(t){if(isMuted)return;const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=0.8;speechSynthesis.speak(u);}
+function toggleMute(){isMuted=!isMuted;document.getElementById('muteBtn').textContent=isMuted?'🔇 מושתק':'🔊 השמע';}
+function getMasteredWords(){const m=getModeData();const bl=new Set(m.blacklist.map(w=>w.en));return(m.masteredWords||[]).filter(w=>!bl.has(w));}
+function updateUserStatsMini(){
+    const m=getModeData(),s=m.stats;
+    const acc=s.totalAnswers>0?Math.round(s.correctAnswers/s.totalAnswers*100):0;
+    const t=getAllWords().length,ms=getMasteredWords().length;
+    const ml=currentMode==='en-to-he'?'EN→HE':'HE→EN';
+    document.getElementById('userStatsMini').innerHTML=
+        `<span class="mastered-badge">${ml}: שולט ב-${ms}/${t}</span> מבחנים: ${s.totalQuizzes} | דיוק: ${acc}% | רשימה שחורה: ${m.blacklist.length}`;
+}
+function addToBlacklist(w){const m=getModeData();const e=m.blacklist.find(x=>x.en===w.en);if(!e)m.blacklist.push({en:w.en,he:w.he,addedAt:new Date().toISOString(),failCount:1});else e.failCount++;saveUser();}
+function removeFromBlacklist(en){getModeData().blacklist=getModeData().blacklist.filter(w=>w.en!==en);saveUser();}
+function isBlacklisted(en){return currentUser?getModeData().blacklist.some(w=>w.en===en):false;}
+
+function renderWords(words){
+    const g=document.getElementById('wordsGrid');g.innerHTML='';
+    const bh=document.getElementById('blacklistHeader');bh.classList.toggle('hidden',currentList!=='blacklist');
+    if(currentList==='blacklist'&&!words.length){g.innerHTML='<div class="empty-blacklist">אין מילים ברשימה השחורה! כל הכבוד! 🎉</div>';document.getElementById('stats').textContent='';bh.classList.add('hidden');return;}
+    words.forEach(w=>{
+        const c=document.createElement('div');c.className='word-card';
+        if(isBlacklisted(w.en))c.classList.add('blacklisted');
+        c.innerHTML=currentMode==='en-to-he'
+            ?`<span class="speaker-icon">🔊</span><div class="english-word" style="direction:ltr">${w.en}</div><div class="hebrew-translation">${w.he}</div>`
+            :`<span class="speaker-icon">🔊</span><div class="english-word" style="direction:rtl">${w.he}</div><div class="hebrew-translation" style="direction:ltr">${w.en}</div>`;
+        c.addEventListener('click',()=>{c.classList.toggle('revealed');speak(w.en);});
+        g.appendChild(c);
+    });
+    document.getElementById('stats').textContent=`${words.length} מילים`;
+}
+function filterWords(){
+    const s=document.getElementById('searchInput').value.toLowerCase();
+    let w=currentList==='blacklist'?getModeData().blacklist.map(x=>({en:x.en,he:x.he,list:'bl'})):getAllWords();
+    if(s)w=w.filter(x=>x.en.toLowerCase().includes(s)||x.he.includes(s));return w;
+}
+function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function getNewWords(){
+    const m=getModeData();
+    const bl=new Set(m.blacklist.map(w=>w.en));
+    const mastered=new Set(m.masteredWords||[]);
+    return getAllWords().filter(w=>!bl.has(w.en)&&!mastered.has(w.en));
+}
+
+function startQuiz(mode){
+    // mode: false=all, true=blacklist, 'new'=new words only
+    quizBlacklistOnly=(mode===true);
+    const m=getModeData();
+    if(mode===true){
+        if(!m.blacklist.length){alert('אין מילים ברשימה השחורה!');return;}
+        quizWords=shuffleArray(m.blacklist.map(w=>({en:w.en,he:w.he})));
+    } else if(mode==='new'){
+        const nw=getNewWords();
+        if(!nw.length){alert('אין מילים חדשות - את/ה כבר מכיר/ה את כולן!');return;}
+        quizWords=shuffleArray([...nw]);
+    } else {
+        quizWords=shuffleArray([...getAllWords()]);
+    }
+    quizIndex=0;quizScore=0;quizTotal=0;quizFirstAttempts={};currentQuizWord=null;
+    m.stats.totalQuizzes++;saveUser();
+    document.getElementById('quizPicker').classList.add('hidden');
+    document.getElementById('wordsGrid').classList.add('hidden');
+    document.getElementById('quizMode').classList.remove('hidden');
+    document.getElementById('searchBox').classList.add('hidden');
+    document.getElementById('controls').classList.add('hidden');
+    document.getElementById('stats').classList.add('hidden');
+    document.getElementById('quizUnsure').classList.add('hidden');
+    showQuizQ();
+}
+function showQuizQ(){
+    if(quizIndex>=quizWords.length){quizIndex=0;quizWords=shuffleArray(quizWords);}
+    const w=quizWords[quizIndex],qw=document.getElementById('quizWord');
+    if(currentMode==='en-to-he'){qw.textContent=w.en;qw.style.direction='ltr';}
+    else{qw.textContent=w.he;qw.style.direction='rtl';}
+    document.getElementById('quizScore').textContent=`ניקוד: ${quizScore}/${quizTotal}`;
+    let wrong,correct;
+    if(currentMode==='en-to-he'){correct=w.he;wrong=getAllWords().filter(x=>x.he!==w.he).sort(()=>Math.random()-.5).slice(0,3).map(x=>x.he);}
+    else{correct=w.en;wrong=getAllWords().filter(x=>x.en!==w.en).sort(()=>Math.random()-.5).slice(0,3).map(x=>x.en);}
+    const opts=shuffleArray([correct,...wrong]);
+    const od=document.getElementById('quizOptions');od.innerHTML='';
+    opts.forEach(o=>{const b=document.createElement('div');b.className='quiz-option';b.textContent=o;if(currentMode==='he-to-en')b.style.direction='ltr';b.addEventListener('click',()=>checkAns(o,w,correct));od.appendChild(b);});
+    document.getElementById('quizNext').classList.add('hidden');
+}
+function checkAns(sel,w,cor){
+    const m=getModeData(),first=!quizFirstAttempts[w.en];currentQuizWord=w;
+    if(first){quizFirstAttempts[w.en]=true;quizTotal++;m.stats.totalAnswers++;}
+    document.querySelectorAll('.quiz-option').forEach(o=>{o.style.pointerEvents='none';if(o.textContent===cor)o.classList.add('correct');else if(o.textContent===sel&&sel!==cor)o.classList.add('wrong');});
+    const ub=document.getElementById('quizUnsure');ub.classList.remove('added');
+    if(quizBlacklistOnly){ub.textContent='עכשיו אני יודע!';ub.classList.add('know-it');}
+    else{ub.textContent='⚠ לא הייתי בטוח במילה הזאת';ub.classList.remove('know-it');}
+    if(sel===cor){if(first){quizScore++;m.stats.correctAnswers++;if(!m.masteredWords)m.masteredWords=[];if(!m.masteredWords.includes(w.en))m.masteredWords.push(w.en);}ub.classList.remove('hidden');}
+    else{if(first){addToBlacklist(w);if(m.masteredWords)m.masteredWords=m.masteredWords.filter(x=>x!==w.en);}ub.classList.add('hidden');}
+    saveUser();updateUserStatsMini();
+    document.getElementById('quizScore').textContent=`ניקוד: ${quizScore}/${quizTotal}`;
+    document.getElementById('quizNext').classList.remove('hidden');
+}
+function markUnsure(){
+    if(!currentQuizWord)return;const ub=document.getElementById('quizUnsure');
+    if(quizBlacklistOnly){if(isBlacklisted(currentQuizWord.en)){removeFromBlacklist(currentQuizWord.en);ub.classList.add('added');ub.textContent='הוסר! ✓';updateUserStatsMini();}}
+    else{if(!isBlacklisted(currentQuizWord.en)){addToBlacklist(currentQuizWord);const m=getModeData();if(m.masteredWords)m.masteredWords=m.masteredWords.filter(w=>w!==currentQuizWord.en);saveUser();ub.classList.add('added');ub.textContent='נוסף לרשימה שחורה';updateUserStatsMini();}}
+}
+function exitQuiz(){
+    document.getElementById('wordsGrid').classList.remove('hidden');
+    document.getElementById('quizMode').classList.add('hidden');
+    document.getElementById('quizPicker').classList.add('hidden');
+    document.getElementById('searchBox').classList.remove('hidden');
+    document.getElementById('controls').classList.remove('hidden');
+    document.getElementById('stats').classList.remove('hidden');
+    currentList='all';
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.list==='all'));
+    renderWords(getAllWords());
+}
+
+// Vocab events
+function showQuizPicker(){
+    document.getElementById('wordsGrid').classList.add('hidden');
+    document.getElementById('searchBox').classList.add('hidden');
+    document.getElementById('controls').classList.add('hidden');
+    document.getElementById('stats').classList.add('hidden');
+    document.getElementById('blacklistHeader').classList.add('hidden');
+    document.getElementById('quizPicker').classList.remove('hidden');
+}
+function closeQuizPicker(){
+    document.getElementById('quizPicker').classList.add('hidden');
+    document.getElementById('wordsGrid').classList.remove('hidden');
+    document.getElementById('searchBox').classList.remove('hidden');
+    document.getElementById('controls').classList.remove('hidden');
+    document.getElementById('stats').classList.remove('hidden');
+    currentList='all';
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.list==='all'));
+    renderWords(getAllWords());
+}
+
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+    if(b.dataset.list==='quiz')showQuizPicker();
+    else{if(!document.getElementById('quizMode').classList.contains('hidden'))exitQuiz();document.getElementById('quizPicker').classList.add('hidden');currentList=b.dataset.list;renderWords(filterWords());}
+}));
+document.getElementById('quizUnsure').addEventListener('click',markUnsure);
+document.getElementById('blacklistQuizBtn').addEventListener('click',()=>showQuizPicker());
+document.getElementById('searchInput').addEventListener('input',()=>renderWords(filterWords()));
+document.getElementById('revealAll').addEventListener('click',()=>document.querySelectorAll('.word-card').forEach(c=>c.classList.add('revealed')));
+document.getElementById('hideAll').addEventListener('click',()=>document.querySelectorAll('.word-card').forEach(c=>c.classList.remove('revealed')));
+document.getElementById('shuffle').addEventListener('click',()=>renderWords(shuffleArray([...filterWords()])));
+document.getElementById('quizNext').addEventListener('click',()=>{document.getElementById('quizUnsure').classList.add('hidden');quizIndex++;showQuizQ();});
+document.getElementById('quizExit').addEventListener('click',exitQuiz);
+document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click',()=>{
+    if(b.dataset.mode===currentMode)return;
+    document.querySelectorAll('.mode-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+    currentMode=b.dataset.mode;updateUserStatsMini();
+    if(!document.getElementById('quizMode').classList.contains('hidden'))exitQuiz();
+    renderWords(filterWords());
+}));
+
+// ===== READING =====
+function renderReadingList(){
+    const c=document.getElementById('readingList');c.innerHTML='';
+    document.getElementById('readingExercise').classList.add('hidden');c.classList.remove('hidden');
+    readingPassages.forEach(p=>{
+        c.innerHTML+=`<div class="content-card" onclick="openPassage(${p.id})" style="border-right-color:${p.difficulty==='Module E'?'var(--purple)':'var(--green)'}">
+        <span class="tag ${p.difficulty==='Module E'?'tag-blue':'tag-green'}">${p.difficulty}</span>
+        <span class="tag tag-orange">${p.topic}</span>
+        <h3>${p.title}</h3>
+        <p>${p.text.replace(/<[^>]+>/g,'').substring(0,100)}...</p>
+        <div class="meta">${p.questions.length} שאלות</div></div>`;
+    });
+}
+function openPassage(id){
+    const p=readingPassages.find(x=>x.id===id);
+    document.getElementById('readingList').classList.add('hidden');
+    const ex=document.getElementById('readingExercise');ex.classList.remove('hidden');
+    let h=`<button class="back-btn" onclick="renderReadingList()">← חזרה</button>`;
+    h+=`<div class="panel"><h2 dir="ltr" style="text-align:left">${p.title}</h2><div class="passage-text">${p.text}</div></div>`;
+    h+=`<div class="panel"><h2>Questions</h2>`;
+    p.questions.forEach((q,i)=>{
+        h+=`<div class="question-block" id="rq-${id}-${i}"><div class="q-num">Question ${i+1}</div><div class="q-text">${q.text}</div><div class="q-options">`;
+        q.options.forEach((o,j)=>{h+=`<div class="q-option" data-q="${id}-${i}" data-a="${j}" onclick="selRA(this,${id},${i})">${o}</div>`;});
+        h+=`</div></div>`;
+    });
+    h+=`<div style="text-align:center"><button class="action-btn primary" onclick="checkRA(${id})">בדוק תשובות ✓</button></div><div id="rr-${id}"></div></div>`;
+    ex.innerHTML=h;
+}
+function selRA(el,pid,qi){document.querySelectorAll(`[data-q="${pid}-${qi}"]`).forEach(o=>o.classList.remove('selected'));el.classList.add('selected');}
+function checkRA(pid){
+    const p=readingPassages.find(x=>x.id===pid);let sc=0;
+    p.questions.forEach((q,i)=>{
+        const sel=document.querySelector(`[data-q="${pid}-${i}"].selected`);
+        document.querySelectorAll(`[data-q="${pid}-${i}"]`).forEach(o=>{o.style.pointerEvents='none';if(+o.dataset.a===q.correct)o.classList.add('correct');else if(o.classList.contains('selected'))o.classList.add('wrong');});
+        if(sel&&+sel.dataset.a===q.correct)sc++;
+        document.getElementById(`rq-${pid}-${i}`).innerHTML+=`<div class="answer-explanation">${q.explanation}</div>`;
+    });
+    const pct=Math.round(sc/p.questions.length*100),cls=pct>=80?'good':pct>=60?'ok':'bad';
+    document.getElementById(`rr-${pid}`).innerHTML=`<div class="result-banner ${cls}">${pct>=80?'🎉':''}ציון: ${sc}/${p.questions.length} (${pct}%)</div>`;
+}
+
+// ===== GRAMMAR =====
+function renderGrammarList(){
+    const c=document.getElementById('grammarList');c.innerHTML='';
+    document.getElementById('grammarView').classList.add('hidden');c.classList.remove('hidden');
+    grammarTopics.forEach(t=>{
+        c.innerHTML+=`<div class="grammar-card">
+        <h3>${t.title}</h3><p>${t.desc}</p>
+        <div class="card-actions">
+            <button class="card-action learn" onclick="event.stopPropagation();openGrammarLearn('${t.id}')">📘 ללמוד</button>
+            <button class="card-action practice" onclick="event.stopPropagation();openGrammarPractice('${t.id}')">✏️ לתרגל (${t.exercises.length})</button>
+        </div></div>`;
+    });
+}
+function openGrammarLearn(id){
+    const t=grammarTopics.find(x=>x.id===id);
+    document.getElementById('grammarList').classList.add('hidden');
+    const v=document.getElementById('grammarView');v.classList.remove('hidden');
+    let h=`<button class="back-btn" onclick="renderGrammarList()">← חזרה לנושאים</button>`;
+    h+=`<div class="sec-header"><h1><span class="emoji">📘</span> ${t.title}</h1></div>`;
+    h+=`<div class="panel"><div class="grammar-lesson">${t.lesson}</div>`;
+    h+=`<div style="text-align:center;margin-top:20px"><button class="action-btn success" onclick="openGrammarPractice('${id}')">✏️ עבור לתרגול</button></div></div>`;
+    v.innerHTML=h;
+}
+function openGrammarPractice(id){
+    const t=grammarTopics.find(x=>x.id===id);
+    document.getElementById('grammarList').classList.add('hidden');
+    const v=document.getElementById('grammarView');v.classList.remove('hidden');
+    let h=`<button class="back-btn" onclick="renderGrammarList()">← חזרה לנושאים</button>`;
+    h+=`<div class="sec-header"><h1><span class="emoji">✏️</span> תרגול: ${t.title}</h1></div>`;
+    h+=`<div style="text-align:center;margin-bottom:16px"><button class="action-btn primary" style="font-size:.9em" onclick="openGrammarLearn('${id}')">📘 חזרה לחומר</button></div>`;
+    h+=`<div class="panel">`;
+    t.exercises.forEach((e,i)=>{
+        h+=`<div class="ge-q">${i+1}. ${e.q}</div><div class="ge-options">`;
+        e.opts.forEach((o,j)=>{h+=`<span class="ge-opt" data-q="g-${id}-${i}" data-a="${j}" onclick="selGA(this,'${id}',${i})">${o}</span>`;});
+        h+=`</div>`;
+    });
+    h+=`<div style="text-align:center;margin-top:16px"><button class="action-btn primary" onclick="checkGA('${id}')">בדוק תשובות ✓</button></div><div id="gr-${id}"></div></div>`;
+    v.innerHTML=h;
+}
+function selGA(el,tid,qi){document.querySelectorAll(`[data-q="g-${tid}-${qi}"]`).forEach(o=>o.classList.remove('selected'));el.classList.add('selected');}
+function checkGA(tid){
+    const t=grammarTopics.find(x=>x.id===tid);let sc=0;
+    t.exercises.forEach((e,i)=>{
+        document.querySelectorAll(`[data-q="g-${tid}-${i}"]`).forEach(o=>{o.style.pointerEvents='none';if(+o.dataset.a===e.correct)o.classList.add('correct');else if(o.classList.contains('selected'))o.classList.add('wrong');});
+        const sel=document.querySelector(`[data-q="g-${tid}-${i}"].selected`);
+        if(sel&&+sel.dataset.a===e.correct)sc++;
+    });
+    const pct=Math.round(sc/t.exercises.length*100),cls=pct>=80?'good':pct>=60?'ok':'bad';
+    document.getElementById(`gr-${tid}`).innerHTML=`<div class="result-banner ${cls}">${pct>=80?'🎉 מצוין!':''}ציון: ${sc}/${t.exercises.length} (${pct}%)</div>`;
+}
+
+// ===== WRITING =====
+function renderWritingList(){
+    const c=document.getElementById('writingList');c.innerHTML='';
+    document.getElementById('writingExercise').classList.add('hidden');c.classList.remove('hidden');
+    writingPrompts.forEach(p=>{
+        c.innerHTML+=`<div class="content-card" onclick="openWriting(${p.id})" style="border-right-color:var(--pink)">
+        <span class="type-badge">${p.type}</span>
+        <h3>${p.title}</h3>
+        <p>${p.prompt.substring(0,90)}...</p></div>`;
+    });
+}
+function openWriting(id){
+    const p=writingPrompts.find(x=>x.id===id);
+    document.getElementById('writingList').classList.add('hidden');
+    const ex=document.getElementById('writingExercise');ex.classList.remove('hidden');
+    const saved=localStorage.getItem(`hafif_essay_${id}`)||'';
+    let h=`<button class="back-btn" onclick="renderWritingList()">← חזרה</button>`;
+    h+=`<div class="panel"><span class="type-badge" style="margin-bottom:10px;display:inline-block">${p.type}</span>`;
+    h+=`<h2 dir="ltr" style="text-align:left">${p.title}</h2>`;
+    h+=`<p dir="ltr" style="text-align:left;margin:14px 0;font-size:1.05em;line-height:1.7">${p.prompt}</p>`;
+    h+=`<p dir="ltr" style="text-align:left;color:var(--purple);font-weight:700">Word count: ${p.wordCount} words</p></div>`;
+    h+=`<div class="writing-tips"><h4>💡 טיפים לכתיבה</h4><ul>`;
+    p.tips.forEach(t=>h+=`<li>${t}</li>`);
+    h+=`</ul><p style="margin-top:8px;color:var(--gray);font-size:.85em"><strong>מבנה מומלץ:</strong> ${p.structure}</p></div>`;
+    h+=`<div class="panel"><h3 dir="ltr" style="text-align:left;margin-bottom:10px">Write your essay:</h3>`;
+    h+=`<textarea class="essay-area" id="essay-${id}" oninput="updWC(${id})" placeholder="Start writing your essay here...">${saved}</textarea>`;
+    h+=`<div class="word-count" id="wc-${id}">Words: 0</div>`;
+    h+=`<div style="display:flex;gap:10px;margin-top:14px;justify-content:center">`;
+    h+=`<button class="action-btn primary" onclick="saveEssay(${id})">💾 שמור טיוטה</button>`;
+    h+=`<button class="action-btn success" onclick="alert('כל הכבוד! עכשיו בדוק שיש לך מבוא, גוף וסיכום, ושהשתמשת ב-Connectors.')">✓ סיימתי</button></div></div>`;
+    ex.innerHTML=h;updWC(id);
+}
+function updWC(id){
+    const t=document.getElementById(`essay-${id}`);if(!t)return;
+    const c=t.value.trim()?t.value.trim().split(/\s+/).length:0;
+    const el=document.getElementById(`wc-${id}`);el.textContent=`Words: ${c}`;
+    el.style.color=c>=120&&c<=150?'var(--green)':c>150?'var(--red)':'var(--gray)';
+}
+function saveEssay(id){localStorage.setItem(`hafif_essay_${id}`,document.getElementById(`essay-${id}`).value);alert('הטיוטה נשמרה! ✓');}
+
+// ===== EXAMS =====
+function renderExamList(){
+    const c=document.getElementById('examList');c.innerHTML='';
+    document.getElementById('examExercise').classList.add('hidden');c.classList.remove('hidden');
+    examSimulations.forEach(e=>{
+        c.innerHTML+=`<div class="exam-card" onclick="openExam(${e.id})">
+        <span class="exam-module">${e.module}</span>
+        <h3>${e.title}</h3><p>${e.desc}</p>
+        <div class="meta">⏱ ${e.duration} דקות</div></div>`;
+    });
+}
+function openExam(id){
+    const e=examSimulations.find(x=>x.id===id);
+    document.getElementById('examList').classList.add('hidden');
+    const ex=document.getElementById('examExercise');ex.classList.remove('hidden');
+    let tl=e.duration*60;
+    let h=`<div class="timer-bar"><div class="timer-display" id="timer">${fmtTime(tl)}</div>`;
+    h+=`<div class="exam-label">${e.title}</div>`;
+    h+=`<button class="back-btn" style="margin:0;background:rgba(255,255,255,0.15);color:white;border-color:rgba(255,255,255,0.3)" onclick="endExam()">סיים מבחן</button></div>`;
+
+    e.sections.forEach((sec,si)=>{
+        h+=`<div class="panel"><h2 dir="ltr" style="text-align:left">${sec.title} (${sec.points} pts)</h2>`;
+        if(sec.type==='reading'){
+            h+=`<div class="passage-text">${sec.passage}</div>`;
+            sec.questions.forEach((q,qi)=>{
+                h+=`<div class="question-block"><div class="q-num">Q${qi+1}</div><div class="q-text">${q.text}</div><div class="q-options">`;
+                q.options.forEach((o,oi)=>{h+=`<div class="q-option" data-q="e-${id}-${si}-${qi}" data-a="${oi}" onclick="document.querySelectorAll('[data-q=\\'e-${id}-${si}-${qi}\\']').forEach(o=>o.classList.remove('selected'));this.classList.add('selected')">${o}</div>`;});
+                h+=`</div></div>`;
+            });
+        } else if(sec.type==='vocabulary'){
+            sec.questions.forEach((q,qi)=>{
+                h+=`<div class="ge-q">${qi+1}. ${q.q}</div><div class="ge-options">`;
+                q.opts.forEach((o,oi)=>{h+=`<span class="ge-opt" data-q="e-${id}-${si}-${qi}" data-a="${oi}" onclick="document.querySelectorAll('[data-q=\\'e-${id}-${si}-${qi}\\']').forEach(o=>o.classList.remove('selected'));this.classList.add('selected')">${o}</span>`;});
+                h+=`</div>`;
+            });
+        } else if(sec.type==='writing'){
+            h+=`<p dir="ltr" style="text-align:left;font-size:1.05em;line-height:1.7;margin-bottom:12px">${sec.prompt}</p>`;
+            h+=`<p dir="ltr" style="text-align:left;color:var(--purple);font-weight:700">Word count: ${sec.wordCount} words</p>`;
+            h+=`<textarea class="essay-area" id="exam-essay-${id}" oninput="updEWC(${id})" placeholder="Write your essay here..."></textarea>`;
+            h+=`<div class="word-count" id="ewc-${id}">Words: 0</div>`;
+        }
+        h+=`</div>`;
+    });
+    h+=`<div style="text-align:center"><button class="action-btn warning" onclick="submitExam(${id})">📤 הגש מבחן</button></div><div id="er-${id}"></div>`;
+    ex.innerHTML=h;
+    if(examTimer)clearInterval(examTimer);
+    examTimer=setInterval(()=>{
+        tl--;const td=document.getElementById('timer');
+        if(td){td.textContent=fmtTime(tl);td.className='timer-display'+(tl<300?' danger':tl<600?' warning':'');}
+        if(tl<=0){clearInterval(examTimer);submitExam(id);}
+    },1000);
+}
+function fmtTime(s){return`${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;}
+function updEWC(id){const t=document.getElementById(`exam-essay-${id}`);if(!t)return;const c=t.value.trim()?t.value.trim().split(/\s+/).length:0;const el=document.getElementById(`ewc-${id}`);el.textContent=`Words: ${c}`;el.style.color=c>=120&&c<=150?'var(--green)':c>150?'var(--red)':'var(--gray)';}
+function endExam(){if(examTimer){clearInterval(examTimer);examTimer=null;}renderExamList();}
+function submitExam(id){
+    if(examTimer){clearInterval(examTimer);examTimer=null;}
+    const e=examSimulations.find(x=>x.id===id);let sc=0,tp=0;
+    e.sections.forEach((sec,si)=>{
+        if(sec.type==='reading'||sec.type==='vocabulary'){
+            const qs=sec.questions;
+            qs.forEach((q,qi)=>{
+                tp++;const ci=q.correct;
+                document.querySelectorAll(`[data-q="e-${id}-${si}-${qi}"]`).forEach(o=>{o.style.pointerEvents='none';if(+o.dataset.a===ci)o.classList.add('correct');else if(o.classList.contains('selected'))o.classList.add('wrong');});
+                const sel=document.querySelector(`[data-q="e-${id}-${si}-${qi}"].selected`);
+                if(sel&&+sel.dataset.a===ci)sc++;
+            });
+        }
+    });
+    const pct=tp>0?Math.round(sc/tp*100):0,cls=pct>=80?'good':pct>=60?'ok':'bad';
+    document.getElementById(`er-${id}`).innerHTML=`<div class="result-banner ${cls}">${pct>=80?'🎉 ':''}ציון: ${sc}/${tp} (${pct}%)<br><span style="font-size:.8em;font-weight:normal">* ציון הכתיבה נבדק בנפרד</span></div>`;
+}
+</script>
+<!-- Firebase + Auth -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>const COURSE_ID = 'english';</script>
+<script src="shared.js"></script>
+</body>
+</html>
