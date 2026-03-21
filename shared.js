@@ -110,6 +110,10 @@ function loadProgress(courseId, callback) {
   else if (ref && !ref.includes('hafifbagrut')) source = 'other';
   else if (ref.includes('hafifbagrut')) source = 'internal';
 
+  // Don't count admin visits
+  const isAdmin = localStorage.getItem('hafif_admin');
+  if (isAdmin === '1') return;
+
   db.ref('visits/' + today + '/' + page).transaction(function(c) { return (c || 0) + 1; });
   if (source !== 'internal') db.ref('visits/' + today + '/sources/' + source).transaction(function(c) { return (c || 0) + 1; });
 })();
