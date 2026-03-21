@@ -183,6 +183,18 @@ body{background:#0a0a1a;color:#e0e0e0;overflow-x:hidden}
     </div>
   </div>
   <div class="admin-stats" id="adminStats"></div>
+  <div style="max-width:900px;margin:0 auto;padding:0 1.5rem">
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:1rem">
+      <div style="background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:1.2rem">
+        <h3 style="font-size:.9rem;color:var(--p);margin-bottom:.8rem">הרשמות לאורך זמן</h3>
+        <canvas id="chartTimeline" height="200"></canvas>
+      </div>
+      <div style="background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:1.2rem">
+        <h3 style="font-size:.9rem;color:var(--p);margin-bottom:.8rem">התפלגות קורסים</h3>
+        <canvas id="chartCourses" height="200"></canvas>
+      </div>
+    </div>
+  </div>
   <div class="admin-users" id="adminUsers"><p style="text-align:center;padding:2rem;color:var(--txl)">טוען...</p></div>
 </div>
 
@@ -256,7 +268,7 @@ body{background:#0a0a1a;color:#e0e0e0;overflow-x:hidden}
   <div class="stitle reveal">
     <span class="tag">הקורסים</span>
     <h2>בחרו מקצוע והתחילו</h2>
-    <p>כל קורס מכסה 100% מהחומר לבגרות</p>
+    <p>בחרו מקצוע והתחילו לתרגל</p>
   </div>
   <div class="courses-grid reveal" id="coursesGrid"></div>
 </div>
@@ -306,6 +318,9 @@ body{background:#0a0a1a;color:#e0e0e0;overflow-x:hidden}
 </footer>
 
 <button id="logoutBtn" class="logout-btn" style="display:none" onclick="doLogout()">התנתקות</button>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>

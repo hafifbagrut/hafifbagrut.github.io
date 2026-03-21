@@ -175,6 +175,83 @@ function openAdmin() {
           '<div class="actions"><button class="delete-btn" onclick="deleteUser(\'' + escHtml(u.phone || '') + '\')">מחק</button></div>' +
         '</div>';
       }).join('');
+
+    // Draw charts if Chart.js is loaded
+    if (typeof Chart !== 'undefined') drawAdminCharts(list);
+  });
+}
+
+let timelineChart = null, coursesChart = null;
+function drawAdminCharts(users) {
+  const timelineCanvas = document.getElementById('chartTimeline');
+  const coursesCanvas = document.getElementById('chartCourses');
+  if (!timelineCanvas || !coursesCanvas) return;
+
+  // Timeline chart - registrations per day (last 30 days)
+  const days = {};
+  const now = new Date();
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(now); d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(5, 10); // MM-DD
+    days[key] = 0;
+  }
+  users.forEach(u => {
+    if (!u.registeredAt) return;
+    const key = new Date(u.registeredAt).toISOString().slice(5, 10);
+    if (days.hasOwnProperty(key)) days[key]++;
+  });
+
+  if (timelineChart) timelineChart.destroy();
+  timelineChart = new Chart(timelineCanvas, {
+    type: 'line',
+    data: {
+      labels: Object.keys(days).map(k => k.replace('-', '/')),
+      datasets: [{
+        label: 'הרשמות',
+        data: Object.values(days),
+        borderColor: '#2980b9',
+        backgroundColor: 'rgba(41,128,185,.1)',
+        fill: true,
+        tension: .4,
+        pointRadius: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, ticks: { stepSize: 1 } },
+        x: { ticks: { maxTicksLimit: 10, font: { size: 10 } } }
+      }
+    }
+  });
+
+  // Courses pie chart
+  const courseCount = {};
+  Object.keys(COURSES).forEach(cid => { courseCount[cid] = 0; });
+  users.forEach(u => {
+    if (u.courses) {
+      Object.keys(u.courses).forEach(cid => { courseCount[cid] = (courseCount[cid] || 0) + 1; });
+    }
+    if (u.status === 'approved' && (!u.courses || !u.courses.lashon)) {
+      courseCount.lashon = (courseCount.lashon || 0) + 1;
+    }
+  });
+
+  if (coursesChart) coursesChart.destroy();
+  coursesChart = new Chart(coursesCanvas, {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(courseCount).map(cid => COURSES[cid] ? COURSES[cid].name : cid),
+      datasets: [{
+        data: Object.values(courseCount),
+        backgroundColor: ['#2980b9', '#8e44ad', '#27ae60', '#e67e22', '#e74c3c']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 12, family: 'Heebo' } } } }
+    }
   });
 }
 
