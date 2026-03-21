@@ -184,13 +184,17 @@ body{background:#0a0a1a;color:#e0e0e0;overflow-x:hidden}
   </div>
   <div class="admin-stats" id="adminStats"></div>
   <div style="max-width:900px;margin:0 auto;padding:0 1.5rem">
+    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);padding:1.2rem;margin-bottom:1rem">
+      <h3 style="font-size:.9rem;color:#aaa;margin-bottom:.8rem">כניסות לאתר (30 ימים אחרונים)</h3>
+      <canvas id="chartVisits" height="120"></canvas>
+    </div>
     <div style="display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:1rem">
-      <div style="background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:1.2rem">
-        <h3 style="font-size:.9rem;color:var(--p);margin-bottom:.8rem">הרשמות לאורך זמן</h3>
+      <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);padding:1.2rem">
+        <h3 style="font-size:.9rem;color:#aaa;margin-bottom:.8rem">הרשמות לאורך זמן</h3>
         <canvas id="chartTimeline" height="200"></canvas>
       </div>
-      <div style="background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:1.2rem">
-        <h3 style="font-size:.9rem;color:var(--p);margin-bottom:.8rem">התפלגות קורסים</h3>
+      <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);padding:1.2rem">
+        <h3 style="font-size:.9rem;color:#aaa;margin-bottom:.8rem">התפלגות קורסים</h3>
         <canvas id="chartCourses" height="200"></canvas>
       </div>
     </div>

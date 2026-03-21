@@ -94,6 +94,16 @@ function loadProgress(courseId, callback) {
   }).catch(() => callback(null));
 }
 
+// ===== VISIT TRACKING =====
+(function(){
+  if (!db) return;
+  const today = new Date().toISOString().slice(0,10); // YYYY-MM-DD
+  const page = typeof COURSE_ID !== 'undefined' && COURSE_ID ? COURSE_ID : 'home';
+  db.ref('visits/' + today + '/' + page).transaction(function(current) {
+    return (current || 0) + 1;
+  });
+})();
+
 // ===== SHOW / HIDE =====
 function hideAuth() {
   const overlay = document.getElementById('authOverlay');
@@ -177,7 +187,10 @@ function openAdmin() {
       }).join('');
 
     // Draw charts if Chart.js is loaded
-    if (typeof Chart !== 'undefined') drawAdminCharts(list);
+    if (typeof Chart !== 'undefined') {
+      drawAdminCharts(list);
+      drawVisitsChart();
+    }
   });
 }
 
@@ -220,8 +233,8 @@ function drawAdminCharts(users) {
       responsive: true,
       plugins: { legend: { display: false } },
       scales: {
-        y: { beginAtZero: true, ticks: { stepSize: 1 } },
-        x: { ticks: { maxTicksLimit: 10, font: { size: 10 } } }
+        y: { beginAtZero: true, ticks: { stepSize: 1, color: '#888' }, grid: { color: 'rgba(255,255,255,.08)' } },
+        x: { ticks: { maxTicksLimit: 10, font: { size: 10 }, color: '#888' }, grid: { color: 'rgba(255,255,255,.05)' } }
       }
     }
   });
@@ -250,8 +263,55 @@ function drawAdminCharts(users) {
     },
     options: {
       responsive: true,
-      plugins: { legend: { position: 'bottom', labels: { font: { size: 12, family: 'Heebo' } } } }
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 12, family: 'Heebo' }, color: '#888' } } }
     }
+  });
+}
+
+let visitsChart = null;
+function drawVisitsChart() {
+  const canvas = document.getElementById('chartVisits');
+  if (!canvas || !db) return;
+
+  db.ref('visits').once('value').then(snap => {
+    const visits = snap.val() || {};
+    const days = {};
+    const now = new Date();
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(now); d.setDate(d.getDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      days[key] = { home: 0, lashon: 0, english: 0 };
+    }
+    Object.keys(visits).forEach(date => {
+      if (days[date]) {
+        days[date].home = visits[date].home || 0;
+        days[date].lashon = visits[date].lashon || 0;
+        days[date].english = visits[date].english || 0;
+      }
+    });
+
+    const labels = Object.keys(days).map(k => k.slice(5).replace('-', '/'));
+
+    if (visitsChart) visitsChart.destroy();
+    visitsChart = new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          { label: 'דף בית', data: Object.values(days).map(d => d.home), backgroundColor: 'rgba(41,128,185,.6)' },
+          { label: 'לשון', data: Object.values(days).map(d => d.lashon), backgroundColor: 'rgba(39,174,96,.6)' },
+          { label: 'אנגלית', data: Object.values(days).map(d => d.english), backgroundColor: 'rgba(142,68,173,.6)' }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#888', font: { size: 11, family: 'Heebo' } } } },
+        scales: {
+          y: { beginAtZero: true, stacked: true, ticks: { stepSize: 1, color: '#888' }, grid: { color: 'rgba(255,255,255,.05)' } },
+          x: { stacked: true, ticks: { maxTicksLimit: 10, font: { size: 10 }, color: '#888' }, grid: { color: 'rgba(255,255,255,.05)' } }
+        }
+      }
+    });
   });
 }
 
