@@ -50,4 +50,5 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--tx);line-he
 .btn:hover{background:var(--pd);transform:translateY(-1px)}
 .btn-a{background:var(--ac)}.btn-a:hover{background:#d35400}
 
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 @media(max-width:768px){body{font-size:15px}}

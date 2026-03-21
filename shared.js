@@ -141,11 +141,53 @@ function doLogout() {
   if (loginPhone) loginPhone.value = '';
 }
 
+// ===== PURCHASE NOTIFICATIONS =====
+let lastPaymentCount = null;
+function listenForPurchases() {
+  if (!db) return;
+  db.ref('payments').on('value', function(snap) {
+    const payments = snap.val() || {};
+    const count = Object.keys(payments).length;
+    if (lastPaymentCount === null) { lastPaymentCount = count; return; }
+    if (count > lastPaymentCount) {
+      const newPayments = Object.values(payments).sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+      const latest = newPayments[0];
+      // Play sound
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.frequency.value = 800; gain.gain.value = 0.3;
+        osc.start(); osc.frequency.linearRampToValueAtTime(1200, ctx.currentTime + 0.1);
+        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.5);
+        osc.stop(ctx.currentTime + 0.5);
+      } catch(e){}
+      // Browser notification
+      if (Notification.permission === 'granted') {
+        new Notification('רכישה חדשה!', { body: (latest.name || '') + ' רכש ' + (COURSES[latest.courseId] ? COURSES[latest.courseId].name : latest.courseId) + ' - ₪' + latest.amount, icon: 'logo-small.jpeg' });
+      }
+      // On-screen alert
+      const toast = document.createElement('div');
+      toast.style.cssText = 'position:fixed;top:1rem;right:1rem;background:#27ae60;color:#fff;padding:1rem 1.5rem;border-radius:12px;font-family:Heebo;font-size:.95rem;font-weight:600;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,.3);animation:slideIn .3s';
+      toast.textContent = 'רכישה חדשה! ' + (latest.name || '') + ' - ' + (COURSES[latest.courseId] ? COURSES[latest.courseId].name : '');
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 5000);
+      lastPaymentCount = count;
+    }
+  });
+  // Request notification permission
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
 // ===== ADMIN PANEL =====
 function openAdmin() {
   const panel = document.getElementById('adminPanel');
   if (!panel || !db) return;
   panel.classList.add('on');
+  listenForPurchases();
 
   db.ref('users').on('value', snap => {
     const users = snap.val() || {};
