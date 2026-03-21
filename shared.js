@@ -160,7 +160,17 @@ function openAdmin() {
       statsHtml += '<div class="admin-stat"><div class="num" style="color:var(--ok)">' + (courseStats[cid] || 0) + '</div><div class="label">' + COURSES[cid].name + '</div></div>';
     });
     statsHtml += '<div class="admin-stat"><div class="num" style="color:var(--ac)">₪' + totalRevenue + '</div><div class="label">הכנסות</div></div>';
+    statsHtml += '<div class="admin-stat" id="visitsStat"><div class="num" style="color:var(--pl)">...</div><div class="label">כניסות היום</div></div>';
     document.getElementById('adminStats').innerHTML = statsHtml;
+
+    // Load today's visits
+    var today = new Date().toISOString().slice(0,10);
+    db.ref('visits/' + today).once('value').then(function(vSnap) {
+      var v = vSnap.val() || {};
+      var totalVisits = (v.home || 0) + (v.lashon || 0) + (v.english || 0);
+      var el = document.getElementById('visitsStat');
+      if (el) el.innerHTML = '<div class="num" style="color:var(--pl)">' + totalVisits + '</div><div class="label">כניסות היום</div>';
+    });
 
     const sorted = list.sort((a, b) => new Date(b.registeredAt || 0) - new Date(a.registeredAt || 0));
     document.getElementById('adminUsers').innerHTML = sorted.length === 0
