@@ -97,11 +97,21 @@ function loadProgress(courseId, callback) {
 // ===== VISIT TRACKING =====
 (function(){
   if (!db) return;
-  const today = new Date().toISOString().slice(0,10); // YYYY-MM-DD
+  const today = new Date().toISOString().slice(0,10);
   const page = typeof COURSE_ID !== 'undefined' && COURSE_ID ? COURSE_ID : 'home';
-  db.ref('visits/' + today + '/' + page).transaction(function(current) {
-    return (current || 0) + 1;
-  });
+  const ref = document.referrer || '';
+  let source = 'direct';
+  if (ref.includes('tiktok')) source = 'tiktok';
+  else if (ref.includes('instagram')) source = 'instagram';
+  else if (ref.includes('facebook') || ref.includes('fb.')) source = 'facebook';
+  else if (ref.includes('google')) source = 'google';
+  else if (ref.includes('whatsapp')) source = 'whatsapp';
+  else if (ref.includes('t.co') || ref.includes('twitter')) source = 'twitter';
+  else if (ref && !ref.includes('hafifbagrut')) source = 'other';
+  else if (ref.includes('hafifbagrut')) source = 'internal';
+
+  db.ref('visits/' + today + '/' + page).transaction(function(c) { return (c || 0) + 1; });
+  if (source !== 'internal') db.ref('visits/' + today + '/sources/' + source).transaction(function(c) { return (c || 0) + 1; });
 })();
 
 // ===== SHOW / HIDE =====
@@ -170,6 +180,13 @@ function openAdmin() {
       var totalVisits = (v.home || 0) + (v.lashon || 0) + (v.english || 0);
       var el = document.getElementById('visitsStat');
       if (el) el.innerHTML = '<div class="num" style="color:var(--pl)">' + totalVisits + '</div><div class="label">כניסות היום</div>';
+      // Sources breakdown
+      var sources = v.sources || {};
+      var srcHtml = Object.keys(sources).map(function(s) {
+        return '<span style="display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);padding:.15rem .5rem;border-radius:10px;font-size:.75rem;color:#aaa;margin:.15rem">' + s + ': <b style="color:#fff">' + sources[s] + '</b></span>';
+      }).join('');
+      var srcEl = document.getElementById('sourcesStat');
+      if (srcEl) srcEl.innerHTML = srcHtml || '<span style="color:#666;font-size:.8rem">אין נתונים עדיין</span>';
     });
 
     const sorted = list.sort((a, b) => new Date(b.registeredAt || 0) - new Date(a.registeredAt || 0));
