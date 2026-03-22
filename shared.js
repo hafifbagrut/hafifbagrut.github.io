@@ -228,11 +228,22 @@ function openAdmin() {
       if (el) el.innerHTML = '<div class="num" style="color:var(--pl)">' + totalVisits + '</div><div class="label">כניסות היום</div>';
       // Sources breakdown
       var sources = v.sources || {};
-      var srcHtml = Object.keys(sources).map(function(s) {
-        return '<span style="display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);padding:.15rem .5rem;border-radius:10px;font-size:.75rem;color:#aaa;margin:.15rem">' + s + ': <b style="color:#fff">' + sources[s] + '</b></span>';
+      var srcIcons = { tiktok:'🎵', instagram:'📸', facebook:'👥', google:'🔍', whatsapp:'💬', twitter:'🐦', direct:'🔗', other:'🌐' };
+      var srcSorted = Object.entries(sources).sort(function(a,b){ return b[1]-a[1]; });
+      var totalSrc = srcSorted.reduce(function(sum,s){ return sum+s[1]; },0);
+      var srcHtml = srcSorted.map(function(s) {
+        var pct = totalSrc > 0 ? Math.round(s[1]/totalSrc*100) : 0;
+        var icon = srcIcons[s[0]] || '🌐';
+        return '<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem">' +
+          '<span style="font-size:1.2rem;width:24px;text-align:center">' + icon + '</span>' +
+          '<span style="color:#ccc;font-size:.85rem;min-width:70px">' + s[0] + '</span>' +
+          '<div style="flex:1;height:8px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,#2980b9,#3498db);border-radius:4px"></div></div>' +
+          '<span style="color:#fff;font-weight:700;font-size:.85rem;min-width:30px;text-align:left">' + s[1] + '</span>' +
+          '<span style="color:#666;font-size:.75rem;min-width:35px">(' + pct + '%)</span>' +
+        '</div>';
       }).join('');
       var srcEl = document.getElementById('sourcesStat');
-      if (srcEl) srcEl.innerHTML = srcHtml || '<span style="color:#666;font-size:.8rem">אין נתונים עדיין</span>';
+      if (srcEl) srcEl.innerHTML = srcHtml || '<div style="color:#666;font-size:.85rem;text-align:center;padding:1rem">אין נתונים עדיין</div>';
     });
 
     const sorted = list.sort((a, b) => new Date(b.registeredAt || 0) - new Date(a.registeredAt || 0));
