@@ -94,6 +94,33 @@ function loadProgress(courseId, callback) {
   }).catch(() => callback(null));
 }
 
+// ===== AUTO BACKUP (once per day for admin) =====
+(function(){
+  if (!db) return;
+  var isAdmin = localStorage.getItem('hafif_admin');
+  if (isAdmin !== '1') return;
+  var today = new Date().toISOString().slice(0,10);
+  var lastBackup = localStorage.getItem('hafif_last_backup');
+  if (lastBackup === today) return;
+  db.ref('users').once('value').then(function(snap) {
+    var users = snap.val() || {};
+    var list = Object.values(users);
+    var headers = 'שם,טלפון,קורסים,תאריך הרשמה';
+    var csv = '\ufeff' + headers + '\n' + list.map(function(u) {
+      var courses = [];
+      if (u.courses) courses = Object.keys(u.courses);
+      if (u.status === 'approved' && (!u.courses || !u.courses.lashon)) courses.push('lashon');
+      return (u.name||'') + ',' + (u.phone||'') + ',' + courses.join('+') + ',' + (u.registeredAt||'');
+    }).join('\n');
+    var blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'hafif-backup-' + today + '.csv';
+    a.click();
+    localStorage.setItem('hafif_last_backup', today);
+  });
+})();
+
 // ===== VISIT TRACKING =====
 (function(){
   if (!db) return;
