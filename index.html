@@ -55,6 +55,7 @@ body{background:#0a0a1a;color:#e0e0e0;overflow-x:hidden}
 
 /* ===== SECTIONS ===== */
 .section{max-width:1000px;margin:0 auto;padding:5rem 1.5rem}
+#preview{max-width:1200px}
 .stitle{text-align:center;margin-bottom:2.5rem}
 .stitle .tag{display:inline-block;background:rgba(41,128,185,.1);color:var(--pl);padding:.3rem 1rem;border-radius:20px;font-size:.8rem;font-weight:600;margin-bottom:.5rem;border:1px solid rgba(41,128,185,.2)}
 .stitle h2{font-size:2rem;font-weight:800;color:#fff;margin-bottom:.3rem}
@@ -118,6 +119,22 @@ body{background:#0a0a1a;color:#e0e0e0;overflow-x:hidden}
 /* ===== REVEAL ANIMATION ===== */
 .reveal{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
 .reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ===== PREVIEW GRID ===== */
+.preview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.preview-item{text-align:center}
+.preview-item{text-align:center;display:flex;flex-direction:column}
+.preview-item img{width:100%;height:280px;border-radius:12px;border:1px solid rgba(255,255,255,.1);transition:.4s;cursor:pointer;object-fit:cover;object-position:top}
+.preview-item img:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.2);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.preview-item p{margin-top:.6rem;font-size:1.05rem;color:rgba(255,255,255,.55);font-weight:500;line-height:1.4}
+@media(max-width:768px){
+  .preview-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* ===== LIGHTBOX ===== */
+.lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:9999;justify-content:center;align-items:center;cursor:pointer;padding:2rem}
+.lightbox.active{display:flex}
+.lightbox img{max-width:90%;max-height:90%;border-radius:12px;object-fit:contain}
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:768px){
@@ -273,6 +290,33 @@ body{background:#0a0a1a;color:#e0e0e0;overflow-x:hidden}
   </div>
 </div>
 
+<!-- PREVIEW -->
+<div class="section" id="preview">
+  <div class="stitle reveal">
+    <span class="tag">הצצה לפנים</span>
+    <h2>ככה זה נראה מבפנים</h2>
+    <p>תרגולים, סימולציות, הסברים ומילון – הכל במקום אחד</p>
+  </div>
+  <div class="preview-grid reveal">
+    <div class="preview-item">
+      <img src="preview4.png" alt="881 מילים לאנגלית" loading="lazy">
+      <p>881 מילים לאנגלית</p>
+    </div>
+    <div class="preview-item">
+      <img src="preview3.png" alt="הסברים שנדבקים לראש" loading="lazy">
+      <p>הסברים שנדבקים לראש</p>
+    </div>
+    <div class="preview-item">
+      <img src="preview2.png" alt="סימולציות עם טיימר" loading="lazy">
+      <p>סימולציות שלמות עם טיימר</p>
+    </div>
+    <div class="preview-item">
+      <img src="preview1.png" alt="תרגולים בפורמט בגרות" loading="lazy">
+      <p>תרגולים בפורמט בגרות מדויק</p>
+    </div>
+  </div>
+</div>
+
 <!-- COURSES -->
 <div class="section" id="courses">
   <div class="stitle reveal">
@@ -321,8 +365,15 @@ body{background:#0a0a1a;color:#e0e0e0;overflow-x:hidden}
   </div>
 </div>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('active')">
+  <img id="lightboxImg" src="" alt="">
+</div>
+
 <!-- FOOTER -->
 <footer class="site-footer">
+  <a href="mailto:hafifbagrut@gmail.com">צור קשר: hafifbagrut@gmail.com</a>
+  <br>
   חפיף – הכנה לבגרות &copy; 2026
 </footer>
 
@@ -404,6 +455,14 @@ const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Lightbox
+document.querySelectorAll('.preview-item img').forEach(img => {
+  img.addEventListener('click', () => {
+    document.getElementById('lightboxImg').src = img.src;
+    document.getElementById('lightbox').classList.add('active');
+  });
+});
 
 // Smooth scroll
 document.querySelectorAll('a[href^="#"]').forEach(a => {
